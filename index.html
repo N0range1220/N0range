@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>N0range资源站</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- 背景网格装饰 -->
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <!-- 推广位 -->
+  <div class="promo-bar">
+    <a class="promo-item promo-1" href="https://xfastapi.ai/register?aff=7V3LJKVSNKTF" target="_blank" rel="noopener noreferrer">
+      <span class="promo-tag">推荐</span>
+      <span class="promo-name">中转站推荐</span>
+      <span class="promo-desc">稳定可靠 · 有售后</span>
+      <span class="promo-go">前往 →</span>
+    </a>
+    <a class="promo-item promo-2" href="https://dt.bd.cn/#/pages/login/register?invite_code=484200" target="_blank" rel="noopener noreferrer">
+      <span class="promo-tag">网盘</span>
+      <span class="promo-name">网盘推广</span>
+      <span class="promo-desc">注册即享容量</span>
+      <span class="promo-go">前往 →</span>
+    </a>
+  </div>
+
+  <!-- 全局提示横幅 -->
+  <div id="notice-banner" class="notice-banner">
+    <span class="banner-icon">!</span>
+    <div class="banner-text">
+      <strong>随时失效，记得存网盘再观看哦~</strong>
+      资源每周不定期更新，建议收藏本页。失效或缺档请留言：
+      <a class="inline-link" href="https://link3.cc/n0range" target="_blank" rel="noopener noreferrer">link3.cc/n0range</a>
+    </div>
+    <button class="banner-close" aria-label="关闭">×</button>
+  </div>
+
+  <!-- 顶部栏 -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo-dot"></span>
+      <h1>N0range资源站</h1>
+      <span class="brand-sub">// CLOUD DRIVE INDEX</span>
+    </div>
+    <div class="search-wrap">
+      <input id="search" type="text" placeholder="搜索资源标题 / 分类 / 网盘…" autocomplete="off" />
+      <span class="search-icon">⌕</span>
+    </div>
+  </header>
+
+  <!-- 主体 -->
+  <main class="layout">
+    <!-- 侧边分类 -->
+    <aside class="sidebar">
+      <div class="sidebar-title">分类</div>
+      <nav id="category-list" class="cat-list"></nav>
+      <div class="sidebar-stat">
+        共 <span id="total-count">0</span> 条资源
+      </div>
+    </aside>
+
+    <!-- 内容区 -->
+    <section class="content">
+      <div class="content-head">
+        <div class="current-cat" id="current-cat">全部</div>
+        <div class="result-count">显示 <span id="shown-count">0</span> 条</div>
+      </div>
+      <div id="cards" class="cards"></div>
+      <div id="empty" class="empty" hidden>
+        <div class="empty-icon">∅</div>
+        <div>没有匹配的资源</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Powered by GitHub Pages · 数据存于本地 data.js</span>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
