@@ -281,5 +281,33 @@
     }
   });
 
+  // 主题切换：明/暗，记忆到 localStorage
+  var themeBtn = document.getElementById("theme-toggle");
+  var themeIcon = themeBtn ? themeBtn.querySelector(".theme-toggle-icon") : null;
+  function applyThemeIcon(theme) {
+    if (!themeIcon) return;
+    themeIcon.textContent = theme === "light" ? "☀" : "🌙";
+    if (themeBtn) {
+      themeBtn.setAttribute("aria-label", theme === "light" ? "切换到暗色主题" : "切换到明亮主题");
+    }
+  }
+  function currentTheme() {
+    return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  }
+  // 初始化图标（首屏脚本可能已设置 data-theme）
+  applyThemeIcon(currentTheme());
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      var next = currentTheme() === "light" ? "dark" : "light";
+      if (next === "light") {
+        document.documentElement.setAttribute("data-theme", "light");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+      }
+      try { localStorage.setItem("theme", next); } catch (e) {}
+      applyThemeIcon(next);
+    });
+  }
+
   render();
 })();

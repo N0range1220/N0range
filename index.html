@@ -45,6 +45,16 @@
     "inLanguage": "zh-CN"
   }
   </script>
+
+  <!-- 首屏前同步应用主题，避免刷新时闪烁 -->
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("theme");
+      if (t === "light") document.documentElement.setAttribute("data-theme", "light");
+    } catch (e) {}
+  })();
+  </script>
 </head>
 <body>
   <!-- 背景网格装饰 -->
@@ -82,12 +92,15 @@
     <div class="brand">
       <span class="logo-dot"></span>
       <h1>N0range资源站</h1>
-      <span class="brand-sub">// CLOUD DRIVE INDEX</span>
+      <span class="brand-sub">云盘资源导航 | 动漫·剧集·游戏·软件合集</span>
     </div>
     <div class="search-wrap">
       <input id="search" type="text" placeholder="搜索资源标题 / 分类 / 网盘…" autocomplete="off" />
       <span class="search-icon">⌕</span>
     </div>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换主题" title="切换明/暗主题">
+      <span class="theme-toggle-icon">🌙</span>
+    </button>
   </header>
 
   <!-- 主体 -->
