@@ -306,8 +306,64 @@
       }
       try { localStorage.setItem("theme", next); } catch (e) {}
       applyThemeIcon(next);
+      applyGiscusTheme(next);
     });
   }
+
+  // ===== Giscus 评论：动态加载并跟随明暗主题 =====
+  // 说明：需先在仓库启用 Discussions 并安装 Giscus App，
+  //       启用后将下方 categoryId 替换为真实值即可生效。
+  var GISCUS = {
+    repo: "N0range1220/N0range",
+    repoId: "R_kgDOTS7p0g",
+    category: "Announcements",
+    categoryId: "CATEGORY_ID_HERE", // TODO: 启用 Discussions 后替换为真实 ID
+    mapping: "title",
+    reactionsEnabled: "1",
+    emitMetadata: "0",
+    inputPosition: "top",
+    lang: "zh-CN"
+  };
+  var giscusLoaded = false;
+  function giscusThemeName(theme) {
+    return theme === "light" ? "light" : "dark_dimmed";
+  }
+  function applyGiscusTheme(theme) {
+    var frame = document.querySelector("iframe.giscus-frame");
+    if (!frame) return;
+    frame.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: giscusThemeName(theme) } } },
+      "https://giscus.app"
+    );
+  }
+  function loadGiscus() {
+    var box = document.querySelector(".giscus");
+    if (!box || giscusLoaded) return;
+    // categoryId 未配置时显示占位提示，避免加载失败
+    if (GISCUS.categoryId.indexOf("HERE") !== -1) {
+      box.innerHTML = '<p class="giscus-pending">评论系统配置中，稍后再来看看～</p>';
+      return;
+    }
+    giscusLoaded = true;
+    var s = document.createElement("script");
+    s.src = "https://giscus.app/client.js";
+    s.setAttribute("data-repo", GISCUS.repo);
+    s.setAttribute("data-repo-id", GISCUS.repoId);
+    s.setAttribute("data-category", GISCUS.category);
+    s.setAttribute("data-category-id", GISCUS.categoryId);
+    s.setAttribute("data-mapping", GISCUS.mapping);
+    s.setAttribute("data-strict", "0");
+    s.setAttribute("data-reactions-enabled", GISCUS.reactionsEnabled);
+    s.setAttribute("data-emit-metadata", GISCUS.emitMetadata);
+    s.setAttribute("data-input-position", GISCUS.inputPosition);
+    s.setAttribute("data-theme", giscusThemeName(currentTheme()));
+    s.setAttribute("data-lang", GISCUS.lang);
+    s.setAttribute("data-loading", "lazy");
+    s.crossOrigin = "anonymous";
+    s.async = true;
+    box.appendChild(s);
+  }
+  loadGiscus();
 
   render();
 })();
