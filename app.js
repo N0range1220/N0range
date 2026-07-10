@@ -317,7 +317,7 @@
     repo: "N0range1220/N0range",
     repoId: "R_kgDOTS7p0g",
     category: "Announcements",
-    categoryId: "CATEGORY_ID_HERE", // TODO: 启用 Discussions 后替换为真实 ID
+    categoryId: "DIC_kwDOTS7p0s4DA3uZ",
     mapping: "title",
     reactionsEnabled: "1",
     emitMetadata: "0",
