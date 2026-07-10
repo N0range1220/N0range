@@ -15,12 +15,14 @@
  */
 
 var LINKS_DATA = [
-  // ===== Windows工具 (46) =====
+  // ===== Windows工具 (48) =====
   // --- AI相关 ---
   { title: "AI语音合成声音克隆数字人生成 AigcPanelPro-0.11.0-win-x64.exe", url: "https://pan.quark.cn/s/a145ea94cc4e", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
   { title: "AnythingLLMDesktop.exe", url: "https://pan.quark.cn/s/6578be374b24", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
+  { title: "CC-Switch-v3.16.5", url: "https://pan.quark.cn/s/dc0606c9e426", category: "Windows工具", source: "夸克网盘", section: "AI相关", note: "桌面应用，统一管理所有支持的 AI 工具，无需手动编辑配置文件" },
   { title: "Chatbox-1.9.8-Setup.exe", url: "https://pan.quark.cn/s/315cb6edca12", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
   { title: "OllamaSetup.exe", url: "https://pan.quark.cn/s/0ea8f883d94f", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
+  { title: "声音克隆clone_voice", url: "https://pan.quark.cn/s/23928992dde0", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
   { title: "Adobe全家桶 jh版", url: "https://pan.quark.cn/s/09b30cb25fed", category: "Windows工具", source: "夸克网盘" },
   { title: "PDF处理工具 Stirling-PDF-win-installer.exe", url: "https://pan.quark.cn/s/92a0922b513c", category: "Windows工具", source: "夸克网盘" },
   { title: "Steam.exe", url: "https://pan.quark.cn/s/301da7888892", category: "Windows工具", source: "夸克网盘" },
