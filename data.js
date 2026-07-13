@@ -515,7 +515,7 @@ var LINKS_DATA = [
   { title: "齐木楠雄的灾难", url: "https://pan.quark.cn/s/b13f1c0f0f4c", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "龙王的工作", url: "https://pan.quark.cn/s/52ce78e4a3c9", category: "动漫", source: "夸克网盘", note: "附小说" },
 
-  // ===== 学习资料 (123) =====
+  // ===== 学习资料 (140) =====
   { title: "2024年二级建造师全网最全电子版资料", url: "https://pan.quark.cn/s/b5390c103cfc", category: "学习资料", source: "夸克网盘" },
   { title: "2025《毕业论文、毕业答辩》精选资料汇总", url: "https://pan.quark.cn/s/78837394da00", category: "学习资料", source: "夸克网盘" },
   { title: "24年中级经济师网课【基础】", url: "https://pan.quark.cn/s/8d6f08c78475", category: "学习资料", source: "夸克网盘" },
@@ -643,6 +643,24 @@ var LINKS_DATA = [
   { title: "98看见", url: "https://pan.quark.cn/s/e2e8099355c8", category: "学习资料", source: "夸克网盘", section: "豆瓣TOP100电子书" },
   { title: "99也许你该找个人聊聊", url: "https://pan.quark.cn/s/26e07053d36c", category: "学习资料", source: "夸克网盘", section: "豆瓣TOP100电子书" },
   { title: "9房思琪的初恋乐园", url: "https://pan.quark.cn/s/77b65d531547", category: "学习资料", source: "夸克网盘", section: "豆瓣TOP100电子书" },
+  // --- 安全技术书籍 ---
+  { title: "ASP.NET从入门到精通第2版.pdf", url: "https://pan.quark.cn/s/03dada863ac8", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "Android安全攻防权威指南.pdf", url: "https://pan.quark.cn/s/18cdf7ec3530", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "Android软件安全与逆向分析.pdf", url: "https://pan.quark.cn/s/7cc04ee2876f", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "HADOOP权威指南 第3版 完整版.pdf", url: "https://pan.quark.cn/s/6ffefbc9f15e", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "Java编辑思想（第四版）.pdf", url: "https://pan.quark.cn/s/400c276d3a0a", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "JavaScript权威指南(第6版)(中文版).pdf", url: "https://pan.quark.cn/s/2da5a3f59aff", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "JavaScript框架高级编程.pdf", url: "https://pan.quark.cn/s/81cb5534916d", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "Metasploit渗透测试魔鬼训练营-完整版.pdf", url: "https://pan.quark.cn/s/43f933e31d30", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "PHP Web安全开发实战_.pdf", url: "https://pan.quark.cn/s/8172ff30e451", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "PHP安全之道  项目安全的架构、技术与实践.pdf", url: "https://pan.quark.cn/s/cc2120081e3f", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "Python黑帽子+黑客与渗透测试编程之道.pdf", url: "https://pan.quark.cn/s/55771dcbfbeb", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "Web网站漏洞扫描与渗透攻击工具揭秘.pdf", url: "https://pan.quark.cn/s/d236c6117c6c", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "Web渗透技术及实战案例解析.pdf", url: "https://pan.quark.cn/s/4f0ea3168d5e", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "Web渗透测试：使用Kali Linux .pdf", url: "https://pan.quark.cn/s/2d3314fa9ae6", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "Wireshark 数据包分析实战（第二版）.pdf", url: "https://pan.quark.cn/s/8fa00621a211", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "《白帽子讲Web安全》 吴翰清.pdf", url: "https://pan.quark.cn/s/3a4173aa474f", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  { title: "社会工程：安全体系中的人性漏洞 ([美]Christopher Hadnagy [Hadnagy, Christopher]) .pdf", url: "https://pan.quark.cn/s/b7cc5eb3f73c", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
 
   // ===== 安卓软件 (10) =====
   { title: "MT管理器安卓逆向工具 MT2.18.4.apk", url: "https://pan.quark.cn/s/2734e97e6b2e", category: "安卓软件", source: "夸克网盘" },
