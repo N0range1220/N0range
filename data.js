@@ -134,7 +134,7 @@ var LINKS_DATA = [
   { title: "花束般的恋爱(2021) 4K 国语+日语", url: "https://pan.quark.cn/s/32f5a887f34f", category: "剧集", source: "夸克网盘", section: "少量电影" },
   { title: "重出江湖", url: "https://pan.quark.cn/s/2de131684d21", category: "剧集", source: "夸克网盘", section: "少量电影" },
 
-  // ===== 动漫 (379) =====
+  // ===== 动漫 (383) =====
   { title: "#COMPASS2.0 战斗天赋解析系统", url: "https://pan.quark.cn/s/fb90394159e6", category: "动漫", source: "夸克网盘" },
   { title: "1992 幽游白书", url: "https://pan.quark.cn/s/11b8337cbe0d", category: "动漫", source: "夸克网盘" },
   { title: "2.5次元的诱惑", url: "https://pan.quark.cn/s/39b1492fdb20", category: "动漫", source: "夸克网盘", note: "带漫画" },
@@ -514,6 +514,10 @@ var LINKS_DATA = [
   { title: "鹿乃子乃子虎视眈眈", url: "https://pan.quark.cn/s/5bec135473f6", category: "动漫", source: "夸克网盘" },
   { title: "齐木楠雄的灾难", url: "https://pan.quark.cn/s/b13f1c0f0f4c", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "龙王的工作", url: "https://pan.quark.cn/s/52ce78e4a3c9", category: "动漫", source: "夸克网盘", note: "附小说" },
+  { title: "上伊那牡丹，酒醉身姿似百合花般", url: "https://pan.quark.cn/s/f3d78f1e6005", category: "动漫", source: "夸克网盘" },
+  { title: "关于我女友是个一本正经的碧池这件事", url: "https://pan.quark.cn/s/dfd9735172e3", category: "动漫", source: "夸克网盘" },
+  { title: "高校舰队", url: "https://pan.quark.cn/s/ae21ebb485e8", category: "动漫", source: "夸克网盘" },
+  { title: "歌之王子殿下", url: "https://pan.quark.cn/s/c5e6a89f461c", category: "动漫", source: "夸克网盘" },
 
   // ===== 学习资料 (140) =====
   { title: "2024年二级建造师全网最全电子版资料", url: "https://pan.quark.cn/s/b5390c103cfc", category: "学习资料", source: "夸克网盘" },
