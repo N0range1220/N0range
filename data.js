@@ -67,10 +67,12 @@ var LINKS_DATA = [
   { title: "环境切换 Miniconda3-latest-Windows-x86_64.exe", url: "https://pan.quark.cn/s/8628eb69b186", category: "Windows工具", source: "夸克网盘", section: "编程相关" },
   { title: "轻量级编辑器 npp.8.7.7.Installer.x64.exe", url: "https://pan.quark.cn/s/9d45806231b6", category: "Windows工具", source: "夸克网盘", section: "编程相关" },
 
-  // ===== 剧集 (64) =====
+  // ===== 剧集 (69) =====
   { title: "9号秘事.全9季+特别篇.中英双语", url: "https://pan.quark.cn/s/db82a8dfc4e5", category: "剧集", source: "夸克网盘" },
+  { title: "21世纪大君夫人 2026", url: "https://pan.quark.cn/s/582e8a91293e", category: "剧集", source: "夸克网盘" },
   { title: "A 爱，死亡和机器人 1-4季 内封+内嵌字幕 4K+1080P", url: "https://pan.quark.cn/s/b1e52da3f8d1", category: "剧集", source: "夸克网盘" },
   { title: "B 别对我说谎lie to me　1-3季", url: "https://pan.quark.cn/s/fa6352578fa8", category: "剧集", source: "夸克网盘" },
+  { title: "C菜鸟伙房兵 2026", url: "https://pan.quark.cn/s/be60e62325ab", category: "剧集", source: "夸克网盘" },
   { title: "F辐射2（2025）", url: "https://pan.quark.cn/s/490eaf2a1660", category: "剧集", source: "夸克网盘" },
   { title: "G 哥谭 1-5季合集 1080P 内嵌简英字幕", url: "https://pan.quark.cn/s/8b14807efd1f", category: "剧集", source: "夸克网盘" },
   { title: "G 怪奇物语 1-4季", url: "https://pan.quark.cn/s/22eeb23041b4", category: "剧集", source: "夸克网盘" },
@@ -81,7 +83,9 @@ var LINKS_DATA = [
   { title: "M 摩登家庭1-11季 铂金珍藏版", url: "https://pan.quark.cn/s/4ba9d89c5e9c", category: "剧集", source: "夸克网盘" },
   { title: "Q权欲之巅", url: "https://pan.quark.cn/s/315286758ec5", category: "剧集", source: "夸克网盘" },
   { title: "S 神盾局特工 1-7季", url: "https://pan.quark.cn/s/ba2d9ff4c74c", category: "剧集", source: "夸克网盘" },
+  { title: "T铁拳教育 2026", url: "https://pan.quark.cn/s/6b3a22eeb437", category: "剧集", source: "夸克网盘" },
   { title: "W我的天才女友1-4季（2018-2024）1080P", url: "https://pan.quark.cn/s/7fe1dbc12db2", category: "剧集", source: "夸克网盘" },
+  { title: "W我的王室死对头", url: "https://pan.quark.cn/s/863490aeb1c3", category: "剧集", source: "夸克网盘" },
   { title: "X 行骗天下JP 电影+电视剧合集 内封+内嵌字幕 1080P", url: "https://pan.quark.cn/s/76ddb2c0a4a3", category: "剧集", source: "夸克网盘" },
   { title: "X《小谢尔顿》（2017-2024）1-7季全 1080P 中字", url: "https://pan.quark.cn/s/e3d5563c37bf", category: "剧集", source: "夸克网盘" },
   { title: "Y 鱿鱼游戏 1-3季 硬字幕+软字幕 4K+1080P", url: "https://pan.quark.cn/s/157420868fa6", category: "剧集", source: "夸克网盘" },
@@ -94,6 +98,7 @@ var LINKS_DATA = [
   { title: "【日剧】人生删除事务所.2018.全8集", url: "https://pan.quark.cn/s/239e9b959548", category: "剧集", source: "夸克网盘" },
   { title: "【韩剧】给你宇宙", url: "https://pan.quark.cn/s/78931beb1e73", category: "剧集", source: "夸克网盘" },
   { title: "了不起的麦瑟尔夫人.全5季", url: "https://pan.quark.cn/s/f0e0e795b5ce", category: "剧集", source: "夸克网盘" },
+  { title: "努力克服自卑的我们(2026)", url: "https://pan.quark.cn/s/34229234371c", category: "剧集", source: "夸克网盘" },
   { title: "人生切割术 第一季", url: "https://pan.quark.cn/s/1fbab34d92de", category: "剧集", source: "夸克网盘" },
   { title: "依然闪亮", url: "https://pan.quark.cn/s/8b445d7458b5", category: "剧集", source: "夸克网盘" },
   { title: "假面骑士·系列最全资源·合集(最新歌查德+全系列番外+外传)", url: "https://pan.quark.cn/s/22a60d8c3a09", category: "剧集", source: "夸克网盘" },
