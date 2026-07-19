@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DorkHunt // 搜索语法生成器</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0e0a;
+    --bg-2: #0f1410;
+    --panel: #121812;
+    --panel-2: #161e16;
+    --border: #1f2a1f;
+    --border-bright: #2a3a2a;
+    --fg: #d4f5d4;
+    --fg-dim: #7a9a7a;
+    --fg-muted: #4a6a4a;
+    --neon: #00ff9c;
+    --neon-dim: #00cc7a;
+    --orange: #ff6b35;
+    --red: #ff2e63;
+    --yellow: #ffd23f;
+    --cyan: #4ad8e6;
+    --google: #4285f4;
+    --bing: #008373;
+    --baidu: #2932e1;
+    --mono: 'JetBrains Mono', 'IBM Plex Mono', 'Consolas', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 14px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* 扫描线 / 网格背景纹理 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 255, 156, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 156, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0) 0px,
+      rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0.15) 3px,
+      rgba(0, 0, 0, 0) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  .app {
+    position: relative;
+    z-index: 2;
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 18px;
+  }
+
+  /* === 顶部终端标题栏 === */
+  .titlebar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: linear-gradient(180deg, var(--panel) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--border-bright);
+    border-bottom: 2px solid var(--neon-dim);
+    padding: 10px 16px;
+    box-shadow: 0 0 24px rgba(0, 255, 156, 0.08), inset 0 1px 0 rgba(0, 255, 156, 0.1);
+  }
+  .dots { display: flex; gap: 7px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 4px rgba(0,0,0,0.4); }
+  .dot.r { background: var(--red); }
+  .dot.y { background: var(--yellow); }
+  .dot.g { background: var(--neon); }
+  .title {
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--neon);
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 8px rgba(0, 255, 156, 0.5);
+    flex: 1;
+  }
+  .title .cursor { animation: blink 1.1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* 引擎切换器 */
+  .engine-switch {
+    display: flex;
+    border: 1px solid var(--border-bright);
+    background: var(--bg);
+  }
+  .engine-btn {
+    background: transparent;
+    border: none;
+    border-right: 1px solid var(--border-bright);
+    color: var(--fg-dim);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.5px;
+    position: relative;
+  }
+  .engine-btn:last-child { border-right: none; }
+  .engine-btn:hover { color: var(--fg); background: rgba(0, 255, 156, 0.05); }
+  .engine-btn.active { color: #fff; font-weight: 700; }
+  .engine-btn.active[data-engine="google"] { background: var(--google); box-shadow: 0 0 12px rgba(66,133,244,0.6); }
+  .engine-btn.active[data-engine="bing"] { background: var(--bing); box-shadow: 0 0 12px rgba(0,131,115,0.6); }
+  .engine-btn.active[data-engine="baidu"] { background: var(--baidu); box-shadow: 0 0 12px rgba(41,50,225,0.6); }
+
+  /* 返回资源站链接 */
+  .back-link {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 12px;
+    background: var(--bg);
+    border: 1px solid var(--border-bright);
+    color: var(--neon);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .back-link:hover {
+    border-color: var(--neon);
+    box-shadow: 0 0 12px rgba(0,255,156,0.3);
+  }
+  @media (max-width: 768px) {
+    .back-link { display: none; }
+  }
+
+  /* === 主布局 === */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr 400px;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .panel {
+    background: linear-gradient(180deg, var(--panel) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--border);
+    box-shadow: 0 0 0 1px rgba(0,255,156,0.02), inset 0 1px 0 rgba(255,255,255,0.02);
+  }
+  .panel-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,255,156,0.03);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--neon-dim);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .panel-head .pip { color: var(--neon); }
+  .panel-body { padding: 14px; }
+
+  /* === 左侧分类导航 === */
+  .cat-list { display: flex; flex-direction: column; gap: 8px; }
+  .cat-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--fg-dim);
+  }
+  .cat-card:hover {
+    border-color: var(--border-bright);
+    color: var(--fg);
+    background: var(--panel-2);
+  }
+  .cat-card.active {
+    border-left-color: var(--neon);
+    background: rgba(0,255,156,0.06);
+    color: var(--neon);
+    box-shadow: inset 0 0 16px rgba(0,255,156,0.05);
+  }
+  .cat-card .ico {
+    font-size: 18px;
+    width: 22px;
+    text-align: center;
+    text-shadow: 0 0 6px currentColor;
+  }
+  .cat-card .label { font-weight: 600; font-size: 13px; }
+  .cat-card .count {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--fg-muted);
+    background: var(--bg-2);
+    padding: 2px 6px;
+    border: 1px solid var(--border);
+  }
+  .cat-card.active .count { color: var(--neon); border-color: var(--neon-dim); }
+
+  .side-stat {
+    margin-top: 14px;
+    padding: 12px;
+    border: 1px dashed var(--border);
+    background: var(--bg);
+    font-size: 11px;
+    color: var(--fg-muted);
+    line-height: 1.7;
+  }
+  .side-stat b { color: var(--neon-dim); }
+  .side-stat .row { display: flex; justify-content: space-between; }
+
+  /* === 中部操作符区 === */
+  .ops-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px;
+  }
+  .op {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    padding: 0;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .op.unsupported { opacity: 0.4; }
+  .op.unsupported::after {
+    content: '不支持';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 9px;
+    color: var(--red);
+    border: 1px solid var(--red);
+    padding: 1px 5px;
+    background: rgba(255,46,99,0.1);
+    letter-spacing: 1px;
+  }
+  .op-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .op-head:hover { background: var(--panel-2); }
+  .op-toggle {
+    width: 14px; height: 14px;
+    border: 1px solid var(--border-bright);
+    background: var(--bg-2);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .op.enabled .op-toggle {
+    background: var(--neon);
+    border-color: var(--neon);
+    box-shadow: 0 0 8px rgba(0,255,156,0.6);
+  }
+  .op.enabled .op-toggle::after {
+    content: '▸';
+    position: absolute;
+    inset: 0;
+    color: #000;
+    font-size: 10px;
+    text-align: center;
+    line-height: 12px;
+    font-weight: 900;
+  }
+  .op-name {
+    font-weight: 700;
+    color: var(--neon);
+    font-size: 13px;
+  }
+  .op.unsupported .op-name { color: var(--fg-muted); }
+  .op-label { color: var(--fg-dim); font-size: 11px; margin-left: auto; }
+  .op-syntax {
+    font-size: 10px;
+    color: var(--orange);
+    padding: 0 12px 8px;
+    font-family: var(--mono);
+  }
+  .op-input-wrap { padding: 0 12px 12px; display: none; }
+  .op.enabled .op-input-wrap { display: block; }
+  .op-input {
+    width: 100%;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 7px 9px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .op-input:focus { border-color: var(--neon); box-shadow: 0 0 0 1px var(--neon-dim); }
+  .op-input::placeholder { color: var(--fg-muted); }
+  textarea.op-input { resize: vertical; min-height: 50px; line-height: 1.5; }
+  .op-hint { font-size: 10px; color: var(--fg-muted); margin-top: 4px; }
+
+  /* 敏感/日常预设区 */
+  .preset-group { margin-bottom: 18px; }
+  .preset-group-title {
+    font-size: 11px;
+    color: var(--orange);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    border-left: 2px solid var(--orange);
+    padding-left: 8px;
+  }
+  .preset-group.daily .preset-group-title { color: var(--cyan); border-left-color: var(--cyan); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--fg-dim);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .chip:hover { border-color: var(--orange); color: var(--orange); }
+  .chip.active {
+    background: rgba(255,107,53,0.15);
+    border-color: var(--orange);
+    color: var(--orange);
+    box-shadow: 0 0 8px rgba(255,107,53,0.3);
+  }
+  .preset-group.daily .chip:hover { border-color: var(--cyan); color: var(--cyan); }
+  .preset-group.daily .chip.active {
+    background: rgba(74,216,230,0.15);
+    border-color: var(--cyan);
+    color: var(--cyan);
+    box-shadow: 0 0 8px rgba(74,216,230,0.3);
+  }
+
+  /* 漏洞模板区 */
+  .vuln-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+  .vuln-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--red);
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .vuln-card:hover {
+    border-color: var(--red);
+    border-top-color: var(--red);
+    background: rgba(255,46,99,0.05);
+    box-shadow: 0 0 16px rgba(255,46,99,0.15);
+    transform: translateY(-1px);
+  }
+  .vuln-card.active {
+    border-color: var(--red);
+    background: rgba(255,46,99,0.1);
+    box-shadow: 0 0 20px rgba(255,46,99,0.3);
+  }
+  .vuln-name {
+    color: var(--red);
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vuln-desc { color: var(--fg-dim); font-size: 11px; margin-bottom: 8px; line-height: 1.5; }
+  .vuln-query {
+    font-size: 10px;
+    color: var(--yellow);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    padding: 6px 8px;
+    word-break: break-all;
+    line-height: 1.5;
+  }
+
+  /* === 右侧结果区 === */
+  .result-panel { position: sticky; top: 18px; align-self: start; }
+  .result-engine-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    letter-spacing: 1px;
+    margin-left: auto;
+  }
+  .result-display {
+    background: var(--bg);
+    border: 1px solid var(--border-bright);
+    margin: 0 14px 12px;
+    min-height: 90px;
+    position: relative;
+  }
+  .result-line {
+    display: flex;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .result-lineno {
+    color: var(--fg-muted);
+    padding: 0 10px;
+    user-select: none;
+    text-align: right;
+    min-width: 28px;
+    border-right: 1px solid var(--border);
+  }
+  .result-text {
+    padding: 0 12px;
+    color: var(--fg);
+    word-break: break-all;
+    flex: 1;
+  }
+  .tok-op { color: var(--neon); font-weight: 700; }
+  .tok-val { color: var(--fg); }
+  .tok-quote { color: var(--orange); }
+  .tok-sym { color: var(--yellow); }
+  .tok-range { color: var(--cyan); }
+  .result-empty { color: var(--fg-muted); font-style: italic; padding: 20px 14px; text-align: center; }
+
+  /* URL 预览 */
+  .url-preview {
+    margin: 0 14px 12px;
+    padding: 8px 10px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    font-size: 10px;
+    color: var(--cyan);
+    word-break: break-all;
+    line-height: 1.5;
+    display: none;
+  }
+  .url-preview.show { display: block; }
+  .url-preview .label { color: var(--fg-muted); margin-right: 4px; }
+
+  .result-warn {
+    margin: 0 14px 12px;
+    padding: 8px 10px;
+    border: 1px solid var(--orange);
+    background: rgba(255,107,53,0.08);
+    color: var(--orange);
+    font-size: 11px;
+    line-height: 1.5;
+    display: none;
+  }
+  .result-warn.show { display: block; }
+
+  /* URL 增强控件 */
+  .enhance-section {
+    margin: 0 14px 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .enhance-head {
+    padding: 8px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .enhance-head:hover { background: var(--panel-2); }
+  .enhance-body { padding: 10px; display: none; }
+  .enhance-section.open .enhance-body { display: block; }
+  .enhance-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 11px;
+  }
+  .enhance-row:last-child { margin-bottom: 0; }
+  .enhance-row label {
+    color: var(--fg-dim);
+    min-width: 56px;
+    font-weight: 600;
+  }
+  .enhance-row select {
+    flex: 1;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 6px;
+    outline: none;
+    cursor: pointer;
+  }
+  .enhance-row select:focus { border-color: var(--cyan); }
+  .enhance-hint { font-size: 9px; color: var(--fg-muted); margin-top: 4px; line-height: 1.5; }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 0 14px 14px;
+  }
+  .btn {
+    background: var(--bg);
+    border: 1px solid var(--border-bright);
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.5px;
+  }
+  .btn:hover { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 12px rgba(0,255,156,0.2); }
+  .btn-primary {
+    background: var(--neon);
+    color: #000;
+    border-color: var(--neon);
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: var(--neon-dim); box-shadow: 0 0 20px rgba(0,255,156,0.5); color: #000; }
+  .btn-danger:hover { border-color: var(--red); color: var(--red); box-shadow: 0 0 12px rgba(255,46,99,0.2); }
+  .btn-full { grid-column: 1 / -1; }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--neon);
+    color: #000;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 10px 20px;
+    border: 1px solid var(--neon);
+    box-shadow: 0 0 24px rgba(0,255,156,0.5);
+    opacity: 0;
+    transition: all 0.25s;
+    z-index: 100;
+    letter-spacing: 0.5px;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .footer-note {
+    margin-top: 16px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    font-size: 10px;
+    color: var(--fg-muted);
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+  }
+  .footer-note b { color: var(--neon-dim); }
+
+  /* 响应式 */
+  @media (max-width: 1280px) {
+    .layout { grid-template-columns: 200px 1fr; }
+    .result-panel { grid-column: 1 / -1; position: static; }
+  }
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .titlebar { flex-wrap: wrap; }
+    .title { font-size: 13px; }
+    .ops-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- 顶部标题栏 -->
+  <div class="titlebar">
+    <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+    <div class="title">root@dorkhunt:~# <span class="cursor">▌</span></div>
+    <div class="engine-switch" id="engineSwitch">
+      <button class="engine-btn active" data-engine="google">GOOGLE</button>
+      <button class="engine-btn" data-engine="bing">BING</button>
+      <button class="engine-btn" data-engine="baidu">百度</button>
+    </div>
+    <a href="index.html" class="back-link" title="返回资源站">← 资源站</a>
+  </div>
+
+  <!-- 主布局 -->
+  <div class="layout">
+    <!-- 左侧分类 -->
+    <div class="panel">
+      <div class="panel-head"><span class="pip">▸</span> 搜索范围</div>
+      <div class="panel-body">
+        <div class="cat-list" id="catList"></div>
+        <div class="side-stat" id="sideStat"></div>
+      </div>
+    </div>
+
+    <!-- 中部操作区 -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="pip">▸</span>
+        <span id="centerTitle">操作符配置</span>
+        <span class="result-engine-badge" id="centerEngineBadge"></span>
+      </div>
+      <div class="panel-body" id="centerBody"></div>
+    </div>
+
+    <!-- 右侧结果 -->
+    <div class="panel result-panel">
+      <div class="panel-head">
+        <span class="pip">▸</span> 语法输出
+        <span class="result-engine-badge" id="resultEngineBadge"></span>
+      </div>
+      <div class="result-display" id="resultDisplay">
+        <div class="result-empty">// 尚未启用任何操作符<br>// 在左侧选择分类并勾选操作符开始构建语法</div>
+      </div>
+      <div class="url-preview" id="urlPreview"><span class="label">URL:</span><span id="urlPreviewText"></span></div>
+      <div class="result-warn" id="resultWarn"></div>
+
+      <!-- URL 增强参数 -->
+      <div class="enhance-section" id="enhanceSection">
+        <div class="enhance-head" id="enhanceHead"><span>+</span> URL 增强参数（结果数/时间/语言）</div>
+        <div class="enhance-body">
+          <div class="enhance-row">
+            <label>结果数</label>
+            <select id="enhNum">
+              <option value="">默认</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+          <div class="enhance-row">
+            <label>时间过滤</label>
+            <select id="enhTime">
+              <option value="">不限</option>
+              <option value="d">一天内</option>
+              <option value="w">一周内</option>
+              <option value="m">一月内</option>
+              <option value="y">一年内</option>
+            </select>
+          </div>
+          <div class="enhance-row">
+            <label>语言</label>
+            <select id="enhLang">
+              <option value="">不限</option>
+              <option value="zh">中文</option>
+              <option value="en">英文</option>
+            </select>
+          </div>
+          <div class="enhance-hint" id="enhHint">// 部分参数仅特定引擎支持，切换引擎时自动忽略不支持的项</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary btn-full" id="btnSearch">▶ 在新标签打开搜索</button>
+        <button class="btn" id="btnCopy">⎘ 复制语法</button>
+        <button class="btn btn-danger" id="btnReset">✕ 重置全部</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <b>// 提示</b>：本工具覆盖安全研究与日常搜索两大场景。操作符语法会根据所选搜索引擎自动适配；
+    引擎不支持的操作符会灰显并标注。模板与预设可一键填入，切换引擎时语法自动重写。
+    URL 增强参数（结果数/时间/语言）会附加到最终搜索链接。请合法合规使用。
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   数据模型
+============================================================ */
+const ENGINES = {
+  google: { name: 'Google', color: '#4285f4', url: 'https://www.google.com/search?q=' },
+  bing:   { name: 'Bing',   color: '#008373', url: 'https://www.bing.com/search?q=' },
+  baidu:  { name: '百度',    color: '#2932e1', url: 'https://www.baidu.com/s?wd=' }
+};
+
+// 操作符：syntax 为各引擎对应语法，null 表示不支持
+// type: 'prefix' | 'exact' | 'exclude' | 'raw' | 'range'
+const OPERATORS = [
+  // === 常用全套 ===
+  { id:'site',       cat:'common', name:'site',      label:'限定域名',   ph:'example.com', multi:true,  type:'prefix',
+    syntax:{ google:'site:', bing:'site:', baidu:'site:' } },
+  { id:'inurl',      cat:'common', name:'inurl',     label:'URL包含',    ph:'admin', multi:true,  type:'prefix',
+    syntax:{ google:'inurl:', bing:'inurl:', baidu:'inurl:' } },
+  { id:'intitle',    cat:'common', name:'intitle',   label:'标题包含',   ph:'login', multi:true,  type:'prefix',
+    syntax:{ google:'intitle:', bing:'intitle:', baidu:'intitle:' } },
+  { id:'intext',     cat:'common', name:'intext',    label:'正文包含',   ph:'password', multi:true, type:'prefix',
+    syntax:{ google:'intext:', bing:'inbody:', baidu:'intext:' } },
+  { id:'filetype',   cat:'common', name:'filetype',  label:'文件类型',   ph:'pdf', multi:true,  type:'prefix',
+    syntax:{ google:'filetype:', bing:'filetype:', baidu:'filetype:' } },
+  { id:'exclude',    cat:'common', name:'-',         label:'排除关键词', ph:'被排除的词', multi:true, type:'exclude',
+    syntax:{ google:'-', bing:'-', baidu:'-' } },
+  { id:'exclude-site',     cat:'common', name:'-site',     label:'排除域名',   ph:'example.com', multi:true, type:'prefix',
+    syntax:{ google:'-site:', bing:'-site:', baidu:'-site:' } },
+  { id:'exclude-inurl',    cat:'common', name:'-inurl',    label:'排除URL词',  ph:'login', multi:true, type:'prefix',
+    syntax:{ google:'-inurl:', bing:'-inurl:', baidu:'-inurl:' } },
+  { id:'exclude-intitle',  cat:'common', name:'-intitle',  label:'排除标题词', ph:'广告', multi:true, type:'prefix',
+    syntax:{ google:'-intitle:', bing:'-intitle:', baidu:'-intitle:' } },
+  { id:'exclude-intext',   cat:'common', name:'-intext',   label:'排除正文词', ph:'推广', multi:true, type:'prefix',
+    syntax:{ google:'-intext:', bing:'-inbody:', baidu:'-intext:' } },
+  { id:'exclude-filetype', cat:'common', name:'-filetype', label:'排除文件类型',ph:'pdf', multi:true, type:'prefix',
+    syntax:{ google:'-filetype:', bing:'-filetype:', baidu:'-filetype:' } },
+  { id:'exact',      cat:'common', name:'""',        label:'精确匹配',   ph:'精确短语', multi:true, type:'exact',
+    syntax:{ google:'exact', bing:'exact', baidu:'exact' } },
+  { id:'or',         cat:'common', name:'OR',        label:'逻辑或',     ph:'apple OR banana', multi:false, type:'raw',
+    syntax:{ google:'raw', bing:'raw', baidu:'raw' } },
+  { id:'wildcard',   cat:'common', name:'*',         label:'通配符',     ph:'the * day', multi:false, type:'raw',
+    syntax:{ google:'raw', bing:'raw', baidu:null } },
+
+  // === 日常搜索 ===
+  { id:'before',     cat:'daily', name:'before',     label:'日期之前(Google)', ph:'2024-01-01', multi:false, type:'prefix',
+    syntax:{ google:'before:', bing:null, baidu:null } },
+  { id:'after',      cat:'daily', name:'after',      label:'日期之后(Google)', ph:'2024-01-01', multi:false, type:'prefix',
+    syntax:{ google:'after:', bing:null, baidu:null } },
+  { id:'daterange',  cat:'daily', name:'daterange',  label:'日期范围(Julian)', ph:'2458850-2459215', multi:false, type:'prefix',
+    syntax:{ google:'daterange:', bing:'daterange:', baidu:null } },
+  { id:'range',      cat:'daily', name:'..',         label:'数字范围',   ph:'50..100 或 $50..$100', multi:false, type:'range',
+    syntax:{ google:'raw', bing:'raw', baidu:'raw' } },
+  { id:'source',     cat:'daily', name:'source',     label:'新闻来源(Google)', ph:'bbc', multi:true, type:'prefix',
+    syntax:{ google:'source:', bing:null, baidu:null } },
+  { id:'define',     cat:'daily', name:'define',     label:'词典定义',   ph:'serendipity', multi:false, type:'prefix',
+    syntax:{ google:'define:', bing:'define:', baidu:null } },
+  { id:'map',        cat:'daily', name:'map',        label:'地图(Google)', ph:'北京', multi:false, type:'prefix',
+    syntax:{ google:'map:', bing:null, baidu:null } },
+  { id:'weather',    cat:'daily', name:'weather',    label:'天气(Google)', ph:'北京', multi:false, type:'prefix',
+    syntax:{ google:'weather:', bing:null, baidu:null } },
+  { id:'movie',      cat:'daily', name:'movie',      label:'电影(Google)', ph:'北京', multi:false, type:'prefix',
+    syntax:{ google:'movie:', bing:null, baidu:null } },
+  { id:'book',       cat:'daily', name:'book',       label:'图书(Google)', ph:'artificial intelligence', multi:false, type:'prefix',
+    syntax:{ google:'book:', bing:null, baidu:null } },
+  { id:'stocks',     cat:'daily', name:'stocks',     label:'股票(Google)', ph:'AAPL', multi:false, type:'prefix',
+    syntax:{ google:'stocks:', bing:null, baidu:null } },
+  { id:'language',   cat:'daily', name:'language',   label:'语言(Bing)', ph:'zh-CN', multi:false, type:'prefix',
+    syntax:{ google:null, bing:'language:', baidu:null } },
+  { id:'ip',         cat:'daily', name:'ip',         label:'同IP站点(Bing)', ph:'8.8.8.8', multi:false, type:'prefix',
+    syntax:{ google:null, bing:'ip:', baidu:null } },
+  { id:'feed',       cat:'daily', name:'feed',       label:'RSS源(Bing)', ph:'example.com', multi:false, type:'prefix',
+    syntax:{ google:null, bing:'feed:', baidu:null } },
+  { id:'hasfeed',    cat:'daily', name:'hasfeed',    label:'含RSS页(Bing)', ph:'example.com', multi:false, type:'prefix',
+    syntax:{ google:null, bing:'hasfeed:', baidu:null } },
+  { id:'url',        cat:'daily', name:'url',        label:'URL索引(Bing)', ph:'example.com/page', multi:false, type:'prefix',
+    syntax:{ google:null, bing:'url:', baidu:null } },
+  { id:'domain',     cat:'daily', name:'domain',     label:'同域页面(百度)', ph:'example.com', multi:false, type:'prefix',
+    syntax:{ google:null, bing:null, baidu:'domain:' } },
+
+  // === 高级渗透操作符 ===
+  { id:'cache',      cat:'advanced', name:'cache',      label:'缓存版本',     ph:'example.com', multi:false, type:'prefix',
+    syntax:{ google:'cache:', bing:null, baidu:null } },
+  { id:'related',    cat:'advanced', name:'related',    label:'相关站点',     ph:'example.com', multi:false, type:'prefix',
+    syntax:{ google:'related:', bing:null, baidu:null } },
+  { id:'link',       cat:'advanced', name:'link',       label:'反向链接',     ph:'example.com', multi:false, type:'prefix',
+    syntax:{ google:'link:', bing:'inanchor:', baidu:null } },
+  { id:'inanchor',   cat:'advanced', name:'inanchor',   label:'锚文本',       ph:'click here', multi:true, type:'prefix',
+    syntax:{ google:'inanchor:', bing:'inanchor:', baidu:null } },
+  { id:'allintitle', cat:'advanced', name:'allintitle', label:'多词标题',     ph:'login admin', multi:false, type:'prefix',
+    syntax:{ google:'allintitle:', bing:null, baidu:null } },
+  { id:'allinurl',   cat:'advanced', name:'allinurl',   label:'多词URL',      ph:'admin login', multi:false, type:'prefix',
+    syntax:{ google:'allinurl:', bing:null, baidu:null } },
+  { id:'author',     cat:'advanced', name:'author',     label:'作者',         ph:'作者名', multi:false, type:'prefix',
+    syntax:{ google:'author:', bing:null, baidu:null } },
+  { id:'info',       cat:'advanced', name:'info',       label:'站点信息',     ph:'example.com', multi:false, type:'prefix',
+    syntax:{ google:'info:', bing:null, baidu:null } },
+  { id:'contains',   cat:'advanced', name:'contains',   label:'链接类型(Bing)', ph:'pdf', multi:true, type:'prefix',
+    syntax:{ google:null, bing:'contains:', baidu:null } },
+  { id:'loc',        cat:'advanced', name:'loc',        label:'地区(Bing)',   ph:'CN', multi:false, type:'prefix',
+    syntax:{ google:null, bing:'loc:', baidu:null } }
+];
+
+const CATEGORIES = [
+  { id:'common',   name:'常用全套',   icon:'◈' },
+  { id:'daily',    name:'日常搜索',   icon:'◉' },
+  { id:'advanced', name:'高级渗透',   icon:'⚡' },
+  { id:'sensitive',name:'敏感文件',   icon:'☠' },
+  { id:'vuln',     name:'参考模板',   icon:'▤' }
+];
+
+// 敏感文件预设（安全研究场景）
+const SENSITIVE_PRESETS = {
+  filetypes: {
+    title: '敏感文件类型',
+    items: [
+      { label:'PDF文档',  op:'filetype', val:'pdf' },
+      { label:'Word文档', op:'filetype', val:'doc' },
+      { label:'Excel表格',op:'filetype', val:'xls' },
+      { label:'SQL文件',  op:'filetype', val:'sql' },
+      { label:'日志文件', op:'filetype', val:'log' },
+      { label:'环境变量', op:'filetype', val:'env' },
+      { label:'备份文件', op:'filetype', val:'bak' },
+      { label:'配置文件', op:'filetype', val:'conf' },
+      { label:'INI配置',  op:'filetype', val:'ini' },
+      { label:'XML文件',  op:'filetype', val:'xml' }
+    ]
+  },
+  keywords: {
+    title: '敏感关键词',
+    items: [
+      { label:'password',     op:'intext', val:'password' },
+      { label:'passwd',       op:'intext', val:'passwd' },
+      { label:'credentials',  op:'intext', val:'credentials' },
+      { label:'config',       op:'intext', val:'config' },
+      { label:'backup',       op:'intext', val:'backup' },
+      { label:'admin',        op:'intext', val:'admin' },
+      { label:'login',        op:'intext', val:'login' },
+      { label:'secret',       op:'intext', val:'secret' },
+      { label:'token',        op:'intext', val:'token' },
+      { label:'api_key',      op:'intext', val:'api_key' }
+    ]
+  },
+  dirs: {
+    title: '敏感目录',
+    items: [
+      { label:'/admin',     op:'inurl', val:'admin' },
+      { label:'/backup',    op:'inurl', val:'backup' },
+      { label:'/config',    op:'inurl', val:'config' },
+      { label:'/phpinfo',   op:'inurl', val:'phpinfo' },
+      { label:'/.git',      op:'inurl', val:'.git' },
+      { label:'/.env',      op:'inurl', val:'.env' },
+      { label:'/wp-admin',  op:'inurl', val:'wp-admin' },
+      { label:'/uploads',   op:'inurl', val:'uploads' }
+    ]
+  }
+};
+
+// 日常搜索预设（生活场景）
+const DAILY_PRESETS = {
+  ranges: {
+    title: '数字范围（价格/年份等）',
+    items: [
+      { label:'价格 50-100',    op:'range', val:'$50..$100' },
+      { label:'价格 100-500',   op:'range', val:'$100..$500' },
+      { label:'价格 500-1000',  op:'range', val:'$500..$1000' },
+      { label:'低于 $50',       op:'range', val:'..$50' },
+      { label:'高于 $500',      op:'range', val:'$500..' },
+      { label:'年份 2024',      op:'range', val:'2024..2024' },
+      { label:'年份 2020-2024', op:'range', val:'2020..2024' },
+      { label:'年份 2010-2020', op:'range', val:'2010..2020' },
+      { label:'年份 2000-2010', op:'range', val:'2000..2010' }
+    ]
+  },
+  shortcuts: {
+    title: '快捷查询（Google）',
+    items: [
+      { label:'天气 北京',  op:'weather', val:'北京' },
+      { label:'天气 上海',  op:'weather', val:'上海' },
+      { label:'电影 北京',  op:'movie',   val:'北京' },
+      { label:'股票 AAPL',  op:'stocks',  val:'AAPL' },
+      { label:'股票 TSLA',  op:'stocks',  val:'TSLA' },
+      { label:'词典 AI',    op:'define',  val:'AI' },
+      { label:'地图 北京',  op:'map',     val:'北京' },
+      { label:'图书 ML',    op:'book',    val:'machine learning' }
+    ]
+  },
+  news: {
+    title: '新闻来源（Google News）',
+    items: [
+      { label:'来源:新浪',   op:'source', val:'sina' },
+      { label:'来源:人民网', op:'source', val:'people' },
+      { label:'来源:BBC',    op:'source', val:'bbc' },
+      { label:'来源:CNN',    op:'source', val:'cnn' },
+      { label:'来源:Reuters',op:'source', val:'reuters' }
+    ]
+  },
+  langBing: {
+    title: '语言（Bing）',
+    items: [
+      { label:'中文',    op:'language', val:'zh-CN' },
+      { label:'英文',    op:'language', val:'en-US' },
+      { label:'日文',    op:'language', val:'ja-JP' },
+      { label:'韩文',    op:'language', val:'ko-KR' }
+    ]
+  }
+};
+
+// 文件类型快捷预设（filetype 操作符专用）
+const FILETYPE_PRESETS = [
+  { title:'文档',   items:['pdf','doc','docx','ppt','pptx','xls','xlsx','txt','rtf','odt'] },
+  { title:'代码',   items:['py','js','ts','java','c','cpp','cs','php','rb','go','rs','sh'] },
+  { title:'配置',   items:['json','yaml','yml','xml','ini','conf','env','toml','csv'] },
+  { title:'压缩',   items:['zip','rar','7z','tar','gz','bz2'] },
+  { title:'媒体',   items:['mp3','mp4','avi','mkv','mov','jpg','jpeg','png','gif','svg'] },
+  { title:'电子书', items:['epub','mobi','azw3','djvu'] },
+  { title:'数据',   items:['sql','db','sqlite','log','bak'] }
+];
+
+// 参考模板（安全 + 日常两组）
+const TEMPLATES = [
+  // === 安全研究组 ===
+  { id:'sqli',     group:'security', name:'SQL注入探测',   desc:'查找带参数的页面及MySQL报错信息',     query:'inurl:"id=" intext:"warning: mysql"' },
+  { id:'traversal',group:'security', name:'目录遍历',      desc:'探测目录穿越与passwd文件读取',         query:'inurl:"etc/passwd" | inurl:"../../"' },
+  { id:'login',    group:'security', name:'登录页面枚举',  desc:'发现暴露的登录/管理入口',              query:'inurl:login | intitle:"login" | inurl:admin' },
+  { id:'exposed',  group:'security', name:'敏感文件泄露',  desc:'查找含密码的环境变量与SQL转储文件',     query:'filetype:env "DB_PASSWORD" | filetype:sql "INSERT INTO"' },
+  { id:'camera',   group:'security', name:'网络摄像头',    desc:'发现未授权访问的网络摄像头直播页面',    query:'inurl:"view/index.shtml" | intitle:"live view"' },
+  { id:'error',    group:'security', name:'错误信息泄露',  desc:'查找SQL语法错误与堆栈跟踪页面',         query:'intext:"sql syntax error" | intext:"warning: mysql_fetch"' },
+  { id:'git',      group:'security', name:'Git仓库泄露',   desc:'发现暴露的.git目录',                   query:'intitle:"index of" ".git" inurl:".git"' },
+  { id:'phpinfo',  group:'security', name:'PHP信息泄露',   desc:'查找暴露的phpinfo()页面',              query:'inurl:phpinfo intext:"PHP Version" "phpinfo()"' },
+  // === 日常搜索组 ===
+  { id:'paper',    group:'daily', name:'学术论文',     desc:'搜索PDF格式的学术论文与会议报告',       query:'filetype:pdf (论文 OR paper) (摘要 OR abstract)' },
+  { id:'ebook',    group:'daily', name:'电子书下载',   desc:'查找PDF/EPUB格式的电子书资源',          query:'filetype:pdf OR filetype:epub intitle:"书名" "作者"' },
+  { id:'github',   group:'daily', name:'GitHub项目',   desc:'在GitHub限定范围内搜索开源项目',        query:'site:github.com "关键词" intitle:"README"' },
+  { id:'job',      group:'daily', name:'招聘信息',     desc:'查找招聘页面，可排除特定招聘站点',      query:'intitle:"招聘" (职位名) -site:lagou.com' },
+  { id:'recipe',   group:'daily', name:'食谱做法',     desc:'搜索菜谱做法与食材搭配',                query:'intitle:"做法" OR intitle:"食谱" (食材名)' },
+  { id:'travel',   group:'daily', name:'旅游攻略',     desc:'查找目的地旅游攻略与游记',              query:'intitle:"攻略" intitle:"旅游" (目的地)' },
+  { id:'gov',      group:'daily', name:'政府通知',     desc:'在政府站点搜索PDF格式的通知文件',       query:'site:gov.cn filetype:pdf intitle:"通知"' },
+  { id:'review',   group:'daily', name:'产品评测',     desc:'查找产品评测与使用体验文章',            query:'intitle:"评测" intext:"体验" (产品名)' },
+  { id:'course',   group:'daily', name:'学习课件',     desc:'搜索PPT/PDF格式的课程课件',             query:'filetype:ppt OR filetype:pdf intitle:"课件" (课程名)' },
+  { id:'resume',   group:'daily', name:'简历模板',     desc:'查找Word/PDF格式的简历模板',            query:'filetype:doc OR filetype:pdf intitle:"简历" 模板' },
+  { id:'contract', group:'daily', name:'合同范本',     desc:'搜索Word格式的合同模板',                query:'filetype:doc intitle:"合同" 模板 (类型)' },
+  { id:'edu',      group:'daily', name:'高校课件',     desc:'在教育站点限定搜索课程资料',            query:'site:edu filetype:pdf (课程名) 课件' },
+  { id:'lyric',    group:'daily', name:'歌词查找',     desc:'精确匹配歌曲歌词内容',                  query:'"歌词首句" intitle:"歌词"' }
+];
+
+// URL 增强参数映射（影响最终搜索 URL）
+const URL_ENHANCE = {
+  num: { google:'num', bing:'count', baidu:'rn' },
+  time: {
+    google: { d:'tbs=qdr:d', w:'tbs=qdr:w', m:'tbs=qdr:m', y:'tbs=qdr:y' },
+    bing:   { d:'filters=ex1:"ez5"', w:'filters=ex1:"ez3"', m:'filters=ex1:"ez4"', y:'filters=ex1:"ez1"' },
+    baidu:  {} // 百度时间过滤需复杂 gpc 参数，暂不支持
+  },
+  lang: {
+    google: { zh:'lr=lang_zh-CN', en:'lr=lang_en' },
+    bing:   {}, // Bing 用 language: 语法
+    baidu:  {}
+  }
+};
+
+/* ============================================================
+   状态
+============================================================ */
+const state = {
+  engine: 'google',
+  activeCategory: 'common',
+  opValues: {},                 // 操作符输入值
+  enabledOps: new Set(),        // 已启用的操作符 id（独立跟踪，避免空值误判）
+  activePresets: new Set(),
+  activeTemplate: null,
+  urlEnhance: { num:'', time:'', lang:'' }
+};
+
+/* ============================================================
+   工具函数
+============================================================ */
+function getOp(id) { return OPERATORS.find(o => o.id === id); }
+function isOpSupported(op) { return op && op.syntax[state.engine] !== null && op.syntax[state.engine] !== undefined; }
+
+function buildOpTokens(op, rawValue, engine) {
+  const syntax = op.syntax[engine];
+  if (!syntax) return [];
+  const values = op.multi ? rawValue.split('\n').map(s=>s.trim()).filter(Boolean) : [rawValue.trim()];
+  const tokens = [];
+  for (const v of values) {
+    if (!v) continue;
+    switch (op.type) {
+      case 'prefix': tokens.push(`${syntax}${v}`); break;
+      case 'exact':  tokens.push(`"${v}"`); break;
+      case 'exclude':tokens.push(`-${v}`); break;
+      case 'range':  tokens.push(v); break;  // 范围值原样输出（如 $50..$100）
+      case 'raw':    tokens.push(v); break;
+    }
+  }
+  return tokens;
+}
+
+function checkTemplateCompat(query, engine) {
+  const opRegex = /(-?(?:site|inurl|intitle|intext|inbody|filetype|cache|related|link|inanchor|allintitle|allinurl|author|define|info|contains|loc|before|after|daterange|source|map|weather|movie|book|stocks|language|ip|feed|hasfeed|url|domain):)/g;
+  const found = [...query.matchAll(opRegex)].map(m=>m[1].replace(/^-/,'').replace(':',''));
+  const unsupported = [];
+  for (const f of found) {
+    const op = OPERATORS.find(o => o.name === f);
+    if (op && !isOpSupported(op)) unsupported.push(f);
+  }
+  return { ok: unsupported.length === 0, unsupported };
+}
+
+function generateQuery() {
+  if (state.activeTemplate) {
+    const t = TEMPLATES.find(v => v.id === state.activeTemplate);
+    return t ? t.query : '';
+  }
+  const parts = [];
+  // 仅遍历已启用的操作符
+  for (const opId of state.enabledOps) {
+    const op = getOp(opId);
+    if (!op) continue;
+    if (!isOpSupported(op)) continue; // 不支持的跳过
+    const val = state.opValues[opId] || '';
+    if (val.trim()) parts.push(...buildOpTokens(op, val, state.engine));
+  }
+  for (const key of state.activePresets) {
+    const [opId, val] = key.split('::');
+    const op = getOp(opId);
+    if (op && isOpSupported(op)) {
+      parts.push(...buildOpTokens(op, val, state.engine));
+    }
+  }
+  return parts.filter(Boolean).join(' ');
+}
+
+function generateWarnings() {
+  const warns = [];
+  // 检查已启用但不支持的操作符
+  for (const opId of state.enabledOps) {
+    const op = getOp(opId);
+    if (op && !isOpSupported(op)) {
+      warns.push(`操作符 [${op.name}] 在 ${ENGINES[state.engine].name} 中不支持，已跳过`);
+    }
+    // 已启用但未填值
+    if (op && isOpSupported(op) && !(state.opValues[opId] || '').trim()) {
+      warns.push(`操作符 [${op.name}] 已启用但未填写值`);
+    }
+  }
+  if (state.activeTemplate) {
+    const t = TEMPLATES.find(v => v.id === state.activeTemplate);
+    if (t) {
+      const c = checkTemplateCompat(t.query, state.engine);
+      if (!c.ok) warns.push(`模板 [${t.name}] 使用了 ${ENGINES[state.engine].name} 不支持的操作符: ${c.unsupported.join(', ')}`);
+    }
+  }
+  return warns;
+}
+
+// 构建最终搜索 URL（含增强参数）
+function buildSearchUrl(query) {
+  const base = ENGINES[state.engine].url + encodeURIComponent(query);
+  const params = [];
+  const e = state.engine;
+  const u = state.urlEnhance;
+  if (u.num) {
+    const key = URL_ENHANCE.num[e];
+    if (key) params.push(`${key}=${u.num}`);
+  }
+  if (u.time) {
+    const map = URL_ENHANCE.time[e];
+    if (map && map[u.time]) params.push(map[u.time]);
+  }
+  if (u.lang) {
+    const map = URL_ENHANCE.lang[e];
+    if (map && map[u.lang]) params.push(map[u.lang]);
+  }
+  return params.length ? `${base}&${params.join('&')}` : base;
+}
+
+// 语法高亮
+function highlight(text) {
+  if (!text) return '<span style="color:var(--fg-muted);font-style:italic;">// 空查询</span>';
+  let s = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // 操作符前缀（含 -前缀: 排除形式，整体高亮）
+  s = s.replace(/(^|\s)(-?(?:site|inurl|intitle|intext|inbody|filetype|ext|cache|related|link|inanchor|allintitle|allinurl|author|define|info|contains|loc|before|after|daterange|source|map|weather|movie|book|stocks|language|ip|feed|hasfeed|url|domain):)/g,
+    '$1<span class="tok-op">$2</span>');
+  // 数字范围（含$）
+  s = s.replace(/(\$?\d+\.\.\$?\d*)|(\$\d*\.\.\$?\d+)/g, '<span class="tok-range">$1$2</span>');
+  // 引号内容
+  s = s.replace(/"([^"]*)"/g, '<span class="tok-quote">"$1"</span>');
+  // OR / |
+  s = s.replace(/\b(OR)\b/g, '<span class="tok-sym">$1</span>');
+  s = s.replace(/\|/g, '<span class="tok-sym">|</span>');
+  // 排除符号（仅匹配未被前面操作符正则吃掉的 -关键词）
+  s = s.replace(/(^|\s)(-)(\w+)/g, '$1<span class="tok-sym">$2</span><span class="tok-val">$3</span>');
+  return s;
+}
+
+/* ============================================================
+   渲染
+============================================================ */
+const $ = id => document.getElementById(id);
+
+function renderCategories() {
+  const counts = {
+    common: OPERATORS.filter(o=>o.cat==='common').length,
+    daily: OPERATORS.filter(o=>o.cat==='daily').length,
+    advanced: OPERATORS.filter(o=>o.cat==='advanced').length,
+    sensitive: Object.values(SENSITIVE_PRESETS).reduce((s,g)=>s+g.items.length,0),
+    vuln: TEMPLATES.length
+  };
+  $('catList').innerHTML = CATEGORIES.map(c => `
+    <div class="cat-card ${state.activeCategory===c.id?'active':''}" data-cat="${c.id}">
+      <span class="ico">${c.icon}</span>
+      <span class="label">${c.name}</span>
+      <span class="count">${counts[c.id]}</span>
+    </div>
+  `).join('');
+  $('catList').querySelectorAll('.cat-card').forEach(el => {
+    el.addEventListener('click', () => {
+      state.activeCategory = el.dataset.cat;
+      renderCategories();
+      renderCenter();
+    });
+  });
+  const enabledCount = state.enabledOps.size
+    + state.activePresets.size + (state.activeTemplate?1:0);
+  $('sideStat').innerHTML = `
+    <div class="row"><span>当前引擎</span><b>${ENGINES[state.engine].name}</b></div>
+    <div class="row"><span>已启用项</span><b>${enabledCount}</b></div>
+    <div class="row"><span>当前分类</span><b>${CATEGORIES.find(c=>c.id===state.activeCategory).name}</b></div>
+  `;
+}
+
+function renderEngineBadges() {
+  const e = ENGINES[state.engine];
+  const badge = `<span style="background:${e.color};color:#fff;padding:2px 7px;">${e.name.toUpperCase()}</span>`;
+  $('centerEngineBadge').innerHTML = badge;
+  $('resultEngineBadge').innerHTML = badge;
+}
+
+function renderCenter() {
+  const cat = state.activeCategory;
+  $('centerTitle').textContent = CATEGORIES.find(c=>c.id===cat).name + ' 配置';
+  if (cat === 'common' || cat === 'advanced' || cat === 'daily') {
+    renderOperators(cat);
+  } else if (cat === 'sensitive') {
+    renderPresets(SENSITIVE_PRESETS, false);
+  } else if (cat === 'vuln') {
+    renderVuln();
+  }
+  renderResult();
+}
+
+function renderFiletypeChips() {
+  let html = '<div class="ft-presets" style="margin-top:10px;border-top:1px dashed var(--border);padding-top:8px;">';
+  html += '<div style="font-size:10px;color:var(--cyan);margin-bottom:6px;letter-spacing:0.5px;">▸ 快捷文件类型（点击添加）</div>';
+  for (const g of FILETYPE_PRESETS) {
+    html += `<div style="margin-bottom:5px;display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span style="font-size:9px;color:var(--fg-muted);min-width:42px;">${g.title}</span>`;
+    for (const ft of g.items) {
+      html += `<span class="chip ft-chip" data-ft="${ft}" style="font-size:10px;padding:3px 7px;">${ft}</span>`;
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderOperators(cat) {
+  const ops = OPERATORS.filter(o => o.cat === cat);
+  $('centerBody').innerHTML = ops.map(op => {
+    const supported = isOpSupported(op);
+    const enabled = state.enabledOps.has(op.id);  // 用独立 Set 判断
+    const syntaxDisplay = supported ? op.syntax[state.engine] : '不支持';
+    return `
+      <div class="op ${enabled?'enabled':''} ${supported?'':'unsupported'}" data-op="${op.id}">
+        <div class="op-head">
+          <div class="op-toggle"></div>
+          <span class="op-name">${op.name}</span>
+          <span class="op-label">${op.label}</span>
+        </div>
+        <div class="op-syntax">${supported ? '语法: ' + syntaxDisplay : '当前引擎不支持此操作符'}</div>
+        <div class="op-input-wrap">
+          ${op.multi
+            ? `<textarea class="op-input" placeholder="${op.ph}（多个值请换行）">${state.opValues[op.id]||''}</textarea>
+               <div class="op-hint">每行一个值，将分别生成语法</div>`
+            : `<input class="op-input" type="text" placeholder="${op.ph}" value="${(state.opValues[op.id]||'').replace(/"/g,'&quot;')}">`
+          }
+          ${op.id === 'filetype' ? renderFiletypeChips() : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  $('centerBody').querySelectorAll('.op').forEach(el => {
+    const opId = el.dataset.op;
+    const op = getOp(opId);
+    el.querySelector('.op-head').addEventListener('click', () => {
+      if (!isOpSupported(op)) { showToast('该操作符在当前引擎不支持'); return; }
+      if (state.activeTemplate) state.activeTemplate = null;
+      // 切换 enabledOps
+      if (state.enabledOps.has(opId)) {
+        state.enabledOps.delete(opId);
+        delete state.opValues[opId];
+      } else {
+        state.enabledOps.add(opId);
+        if (!state.opValues[opId]) state.opValues[opId] = '';
+      }
+      renderCenter();
+      // 重新渲染后聚焦输入框
+      if (state.enabledOps.has(opId)) {
+        setTimeout(() => {
+          const newInput = document.querySelector(`.op[data-op="${opId}"] .op-input`);
+          if (newInput) newInput.focus();
+        }, 0);
+      }
+      renderCategories();
+    });
+    const input = el.querySelector('.op-input');
+    if (input) {
+      input.addEventListener('input', () => {
+        state.opValues[opId] = input.value;
+        renderResult();
+        renderCategories();
+      });
+      input.addEventListener('click', e => e.stopPropagation());
+    }
+  });
+
+  // 文件类型快捷 chips：点击追加到 filetype 输入框（不触发全量渲染以保持焦点）
+  $('centerBody').querySelectorAll('.ft-chip').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      const ft = el.dataset.ft;
+      // 确保 filetype 操作符已启用
+      if (!state.enabledOps.has('filetype')) {
+        state.enabledOps.add('filetype');
+        if (!state.opValues['filetype']) state.opValues['filetype'] = '';
+      }
+      const cur = state.opValues['filetype'] || '';
+      const lines = cur.split('\n').map(s=>s.trim()).filter(Boolean);
+      if (!lines.includes(ft)) lines.push(ft);
+      state.opValues['filetype'] = lines.join('\n');
+      // 仅同步输入框 value，不重新渲染整个中心区
+      const ta = document.querySelector('.op[data-op="filetype"] .op-input');
+      if (ta) ta.value = state.opValues['filetype'];
+      renderResult();
+      renderCategories();
+    });
+  });
+}
+
+// 通用预设渲染（敏感文件/日常搜索共用）
+function renderPresets(presetGroups, isDaily) {
+  let html = `<div style="font-size:11px;color:${isDaily?'var(--cyan)':'var(--fg-dim)'};margin-bottom:14px;line-height:1.6;">` +
+    (isDaily
+      ? '◉ 点击预设项快速添加到语法。青色高亮表示已添加。切换引擎时自动适配支持的语法。'
+      : '▸ 点击预设项快速添加到语法。橙色高亮表示已添加。切换引擎时自动适配支持的语法。') +
+    '</div>';
+  for (const [groupKey, group] of Object.entries(presetGroups)) {
+    const isUnsupportedGroup = isDaily && groupKey === 'langBing' && state.engine !== 'bing';
+    html += `<div class="preset-group ${isDaily?'daily':''}">
+      <div class="preset-group-title">${group.title}</div>
+      <div class="chips">`;
+    for (const item of group.items) {
+      const op = getOp(item.op);
+      const supported = isOpSupported(op);
+      const key = `${item.op}::${item.val}`;
+      const active = state.activePresets.has(key);
+      html += `<div class="chip ${active?'active':''}" data-key="${key}" data-op="${item.op}" data-val="${item.val}"
+        style="${supported?'':'opacity:0.4;text-decoration:line-through;cursor:not-allowed;'}"
+        title="${supported?'添加 '+item.op+':'+item.val : ENGINES[state.engine].name+' 不支持 '+item.op}">${item.label}</div>`;
+    }
+    html += `</div></div>`;
+  }
+  html += `<div style="margin-top:8px;"><button class="btn btn-danger" id="clearPresets" style="width:100%;">✕ 清除所有预设</button></div>`;
+  $('centerBody').innerHTML = html;
+
+  $('centerBody').querySelectorAll('.chip').forEach(el => {
+    el.addEventListener('click', () => {
+      const op = getOp(el.dataset.op);
+      if (!isOpSupported(op)) { showToast(`${ENGINES[state.engine].name} 不支持 ${el.dataset.op}`); return; }
+      if (state.activeTemplate) state.activeTemplate = null;
+      const key = el.dataset.key;
+      if (state.activePresets.has(key)) state.activePresets.delete(key);
+      else state.activePresets.add(key);
+      renderPresets(presetGroups, isDaily);
+      renderCategories();
+    });
+  });
+  const cp = $('clearPresets');
+  if (cp) cp.addEventListener('click', () => {
+    state.activePresets.clear();
+    renderPresets(presetGroups, isDaily);
+    renderCategories();
+  });
+}
+
+function renderVuln() {
+  let html = '<div style="font-size:11px;color:var(--fg-dim);margin-bottom:14px;line-height:1.6;">' +
+    '▤ 点击模板卡片一键填入语法。激活模板后将覆盖操作符配置；切换引擎会检测兼容性并提示。占位词（括号内）请按需替换。</div>';
+  const groups = [
+    { id:'security', title:'安全研究模板', color:'var(--red)',  icon:'☠' },
+    { id:'daily',    title:'日常搜索模板', color:'var(--cyan)', icon:'◉' }
+  ];
+  for (const g of groups) {
+    const items = TEMPLATES.filter(t => t.group === g.id);
+    if (!items.length) continue;
+    html += `<div style="font-size:11px;font-weight:700;color:${g.color};letter-spacing:1px;margin:14px 0 8px;border-left:2px solid ${g.color};padding-left:8px;text-transform:uppercase;">${g.icon} ${g.title}</div>`;
+    html += '<div class="vuln-grid">';
+    for (const t of items) {
+      const active = state.activeTemplate === t.id;
+      const style = active
+        ? (g.id==='daily'
+            ? 'border:1px solid var(--cyan);border-top:2px solid var(--cyan);background:rgba(74,216,230,0.1);box-shadow:0 0 20px rgba(74,216,230,0.3);'
+            : 'border:1px solid var(--red);border-top:2px solid var(--red);background:rgba(255,46,99,0.1);box-shadow:0 0 20px rgba(255,46,99,0.3);')
+        : `border-top:2px solid ${g.color};`;
+      html += `<div class="vuln-card" data-tpl="${t.id}" style="${style}">
+        <div class="vuln-name" style="color:${g.color};">${g.icon} ${t.name}</div>
+        <div class="vuln-desc">${t.desc}</div>
+        <div class="vuln-query">${t.query.replace(/</g,'&lt;')}</div>
+      </div>`;
+    }
+    html += '</div>';
+  }
+  html += `<div style="margin-top:12px;"><button class="btn btn-danger" id="clearTpl" style="width:100%;">✕ 取消模板选择</button></div>`;
+  $('centerBody').innerHTML = html;
+
+  $('centerBody').querySelectorAll('.vuln-card').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.tpl;
+      state.activeTemplate = state.activeTemplate === id ? null : id;
+      renderVuln();
+      renderCategories();
+    });
+  });
+  const ct = $('clearTpl');
+  if (ct) ct.addEventListener('click', () => {
+    state.activeTemplate = null;
+    renderVuln();
+    renderCategories();
+  });
+}
+
+function renderResult() {
+  const q = generateQuery();
+  const warns = generateWarnings();
+  const display = $('resultDisplay');
+  if (!q) {
+    display.innerHTML = '<div class="result-empty">// 尚未启用任何操作符<br>// 在左侧选择分类并勾选操作符开始构建语法</div>';
+    $('urlPreview').classList.remove('show');
+  } else {
+    const lines = q.split('\n');
+    display.innerHTML = lines.map((line, i) => `
+      <div class="result-line">
+        <div class="result-lineno">${i+1}</div>
+        <div class="result-text">${highlight(line)}</div>
+      </div>
+    `).join('');
+    // URL 预览
+    const url = buildSearchUrl(q);
+    $('urlPreviewText').textContent = url;
+    $('urlPreview').classList.add('show');
+  }
+  const warnEl = $('resultWarn');
+  if (warns.length) {
+    warnEl.innerHTML = '⚠ ' + warns.join('<br>⚠ ');
+    warnEl.classList.add('show');
+  } else {
+    warnEl.classList.remove('show');
+  }
+}
+
+function renderEnhanceHint() {
+  const e = state.engine;
+  const parts = [];
+  if (state.urlEnhance.time && (!URL_ENHANCE.time[e] || !URL_ENHANCE.time[e][state.urlEnhance.time])) parts.push('时间过滤');
+  if (state.urlEnhance.lang && (!URL_ENHANCE.lang[e] || !URL_ENHANCE.lang[e][state.urlEnhance.lang])) parts.push('语言');
+  if (state.urlEnhance.num && !URL_ENHANCE.num[e]) parts.push('结果数');
+  $('enhHint').textContent = parts.length
+    ? `// ${ENGINES[e].name} 不支持: ${parts.join('、')}，已忽略`
+    : '// 部分参数仅特定引擎支持，切换引擎时自动忽略不支持的项';
+}
+
+/* ============================================================
+   交互
+============================================================ */
+function setEngine(eng) {
+  state.engine = eng;
+  $('engineSwitch').querySelectorAll('.engine-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.engine === eng);
+  });
+  // 清除当前引擎不支持的预设
+  for (const key of [...state.activePresets]) {
+    const [opId] = key.split('::');
+    const op = getOp(opId);
+    if (!isOpSupported(op)) state.activePresets.delete(key);
+  }
+  // 清除当前引擎不支持的操作符（保留值，仅移除启用标记）
+  for (const opId of [...state.enabledOps]) {
+    const op = getOp(opId);
+    if (op && !isOpSupported(op)) state.enabledOps.delete(opId);
+  }
+  renderEngineBadges();
+  renderCenter();
+  renderCategories();
+  renderEnhanceHint();
+}
+
+$('engineSwitch').addEventListener('click', e => {
+  const btn = e.target.closest('.engine-btn');
+  if (btn) setEngine(btn.dataset.engine);
+});
+
+$('btnCopy').addEventListener('click', async () => {
+  const q = generateQuery();
+  if (!q) { showToast('语法为空，无法复制'); return; }
+  try {
+    await navigator.clipboard.writeText(q);
+    showToast('✓ 已复制语法到剪贴板');
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = q; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast('✓ 已复制语法到剪贴板'); }
+    catch { showToast('✕ 复制失败，请手动选择'); }
+    document.body.removeChild(ta);
+  }
+});
+
+$('btnSearch').addEventListener('click', () => {
+  const q = generateQuery();
+  if (!q) { showToast('语法为空'); return; }
+  const url = buildSearchUrl(q);
+  window.open(url, '_blank', 'noopener');
+});
+
+$('btnReset').addEventListener('click', () => {
+  state.opValues = {};
+  state.enabledOps.clear();
+  state.activePresets.clear();
+  state.activeTemplate = null;
+  state.urlEnhance = { num:'', time:'', lang:'' };
+  $('enhNum').value = '';
+  $('enhTime').value = '';
+  $('enhLang').value = '';
+  renderCenter();
+  renderResult();
+  renderCategories();
+  renderEnhanceHint();
+  showToast('✓ 已重置全部');
+});
+
+// URL 增强控件
+$('enhanceHead').addEventListener('click', () => {
+  $('enhanceSection').classList.toggle('open');
+});
+$('enhNum').addEventListener('change', e => { state.urlEnhance.num = e.target.value; renderResult(); renderEnhanceHint(); });
+$('enhTime').addEventListener('change', e => { state.urlEnhance.time = e.target.value; renderResult(); renderEnhanceHint(); });
+$('enhLang').addEventListener('change', e => { state.urlEnhance.lang = e.target.value; renderResult(); renderEnhanceHint(); });
+
+let toastTimer;
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+/* ============================================================
+   初始化
+============================================================ */
+renderCategories();
+renderEngineBadges();
+renderCenter();
+renderResult();
+renderEnhanceHint();
+</script>
+</body>
+</html>

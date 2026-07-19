@@ -653,6 +653,29 @@ body {
 .theme-toggle:active { transform: scale(0.92); }
 .theme-toggle-icon { pointer-events: none; }
 
+/* 跳转到 DorkHunt 搜索语法生成器 */
+.nav-link {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  transition: border-color 0.18s, box-shadow 0.18s, transform 0.12s;
+}
+.nav-link:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12);
+}
+.nav-link:active { transform: scale(0.96); }
+
 /* ===== 明亮主题 =====
    通过 [data-theme="light"] 覆盖根变量，暗色保持默认 */
 :root[data-theme="light"] {
@@ -698,6 +721,7 @@ body {
   .content { padding: 20px 18px; }
   .cards { grid-template-columns: 1fr; }
   .theme-toggle { width: 36px; height: 36px; font-size: 16px; }
+  .nav-link { height: 36px; padding: 0 10px; font-size: 12px; }
   .comments { padding: 8px 18px 0; }
   .comments-inner { margin-left: 0; }
 }
