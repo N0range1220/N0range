@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NewsNow // 热点聚合</title>
+<meta name="description" content="聚合微博、知乎、B站、抖音、百度、头条等多平台实时热点，简洁阅读。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0e0a;
+    --bg-2: #0f1410;
+    --panel: #121812;
+    --panel-2: #161e16;
+    --border: #1f2a1f;
+    --border-bright: #2a3a2a;
+    --fg: #d4f5d4;
+    --fg-dim: #7a9a7a;
+    --fg-muted: #4a6a4a;
+    --neon: #00ff9c;
+    --neon-dim: #00cc7a;
+    --orange: #ff6b35;
+    --red: #ff2e63;
+    --yellow: #ffd23f;
+    --cyan: #4ad8e6;
+    --mono: 'JetBrains Mono', 'IBM Plex Mono', 'Consolas', monospace;
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f7f5;
+    --bg-2: #eef2ee;
+    --panel: #ffffff;
+    --panel-2: #f4f8f4;
+    --border: #d8e0d8;
+    --border-bright: #b8c8b8;
+    --fg: #1a2e1a;
+    --fg-dim: #4a6a4a;
+    --fg-muted: #7a9a7a;
+    --neon: #00875a;
+    --neon-dim: #006640;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 14px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 255, 156, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 156, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none; z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0) 4px);
+    pointer-events: none; z-index: 1; opacity: 0.4;
+  }
+  :root[data-theme="light"] body::after { opacity: 0.15; }
+
+  .app { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; padding: 18px; }
+
+  /* === 顶部标题栏 === */
+  .titlebar {
+    display: flex; align-items: center; gap: 16px;
+    background: linear-gradient(180deg, var(--panel) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--border-bright);
+    border-bottom: 2px solid var(--neon-dim);
+    padding: 10px 16px;
+    box-shadow: 0 0 24px rgba(0, 255, 156, 0.08), inset 0 1px 0 rgba(0, 255, 156, 0.1);
+    flex-wrap: wrap;
+  }
+  .dots { display: flex; gap: 7px; flex-shrink: 0; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 4px rgba(0,0,0,0.4); }
+  .dot.r { background: var(--red); }
+  .dot.y { background: var(--yellow); }
+  .dot.g { background: var(--neon); }
+  .title {
+    font-weight: 800; font-size: 15px; color: var(--neon);
+    letter-spacing: 0.5px; text-shadow: 0 0 8px rgba(0, 255, 156, 0.5);
+    flex: 1; min-width: 200px;
+  }
+  .title .cursor { animation: blink 1.1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .titlebar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+  /* 刷新按钮 */
+  .refresh-btn, .theme-btn {
+    height: 30px; padding: 0 12px;
+    background: var(--bg); border: 1px solid var(--border-bright);
+    color: var(--neon);
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.5px; cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .refresh-btn:hover, .theme-btn:hover {
+    border-color: var(--neon);
+    box-shadow: 0 0 12px rgba(0,255,156,0.3);
+  }
+  .refresh-btn:active, .theme-btn:active { transform: scale(0.96); }
+  .refresh-btn.loading { opacity: 0.6; pointer-events: none; }
+  .refresh-btn .spin { display: inline-block; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .back-link {
+    display: flex; align-items: center; height: 30px; padding: 0 12px;
+    background: var(--bg); border: 1px solid var(--border-bright);
+    color: var(--neon); text-decoration: none;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .back-link:hover { border-color: var(--neon); box-shadow: 0 0 12px rgba(0,255,156,0.3); }
+
+  /* === 源切换器 === */
+  .sources {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 14px; padding: 12px;
+    background: var(--panel); border: 1px solid var(--border);
+  }
+  .src-btn {
+    background: var(--bg); border: 1px solid var(--border-bright);
+    color: var(--fg-dim);
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    padding: 7px 14px; cursor: pointer;
+    transition: all 0.15s; letter-spacing: 0.3px;
+  }
+  .src-btn:hover { color: var(--fg); border-color: var(--neon-dim); }
+  .src-btn.active {
+    background: var(--neon); color: #0a0e0a; border-color: var(--neon);
+    box-shadow: 0 0 12px rgba(0,255,156,0.4);
+  }
+
+  /* === 主面板 === */
+  .main-panel {
+    margin-top: 14px;
+    background: var(--panel); border: 1px solid var(--border-bright);
+    box-shadow: 0 0 24px rgba(0, 255, 156, 0.05);
+  }
+  .panel-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--border-bright);
+    font-size: 13px; font-weight: 700; color: var(--neon);
+  }
+  .pip { color: var(--neon-dim); }
+  .panel-head .src-name { color: var(--fg); margin-left: 4px; }
+  .panel-head .update-time {
+    margin-left: auto; font-size: 11px; color: var(--fg-muted);
+    font-weight: 400; letter-spacing: 0.3px;
+  }
+
+  /* === 列表 === */
+  .news-list {
+    list-style: none; padding: 4px 0;
+  }
+  .news-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+    text-decoration: none; color: inherit;
+  }
+  .news-item:last-child { border-bottom: none; }
+  .news-item:hover { background: var(--panel-2); }
+  .news-item:hover .news-title { color: var(--neon); }
+
+  .rank {
+    flex-shrink: 0; width: 32px; text-align: center;
+    font-weight: 800; font-size: 14px;
+    color: var(--fg-muted);
+    font-family: var(--mono);
+  }
+  .news-item:nth-child(1) .rank { color: var(--red); text-shadow: 0 0 6px rgba(255,46,99,0.4); }
+  .news-item:nth-child(2) .rank { color: var(--orange); }
+  .news-item:nth-child(3) .rank { color: var(--yellow); }
+
+  .news-title {
+    flex: 1; font-size: 13px; line-height: 1.5;
+    color: var(--fg); transition: color 0.12s;
+    word-break: break-all;
+  }
+  .news-hot {
+    flex-shrink: 0; font-size: 11px;
+    color: var(--neon-dim); letter-spacing: 0.3px;
+    font-weight: 600;
+  }
+  .news-arrow {
+    flex-shrink: 0; color: var(--fg-muted); font-size: 12px;
+    transition: color 0.12s, transform 0.12s;
+  }
+  .news-item:hover .news-arrow { color: var(--neon); transform: translateX(2px); }
+
+  /* === 状态提示 === */
+  .status {
+    padding: 40px 20px; text-align: center;
+    color: var(--fg-muted); font-size: 13px;
+    line-height: 1.8;
+  }
+  .status.error { color: var(--red); }
+  .status .spin {
+    display: inline-block; animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+  }
+
+  /* 加载骨架 */
+  .skeleton-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .skeleton-rank, .skeleton-title, .skeleton-hot {
+    background: linear-gradient(90deg, var(--panel-2) 0%, var(--border-bright) 50%, var(--panel-2) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 2px;
+  }
+  .skeleton-rank { width: 32px; height: 16px; flex-shrink: 0; }
+  .skeleton-title { flex: 1; height: 14px; }
+  .skeleton-hot { width: 50px; height: 12px; flex-shrink: 0; }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* === 页脚说明 === */
+  .footer-note {
+    margin-top: 16px; padding: 10px 14px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    font-size: 10px; color: var(--fg-muted);
+    line-height: 1.6; letter-spacing: 0.3px;
+  }
+  .footer-note b { color: var(--neon-dim); }
+  .footer-note a { color: var(--cyan); text-decoration: none; }
+  .footer-note a:hover { text-decoration: underline; }
+
+  /* === 响应式 === */
+  @media (max-width: 768px) {
+    .app { padding: 10px; }
+    .titlebar { gap: 10px; padding: 8px 12px; }
+    .title { font-size: 12px; min-width: 140px; }
+    .sources { padding: 8px; gap: 6px; }
+    .src-btn { padding: 6px 10px; font-size: 11px; }
+    .news-item { padding: 10px 12px; gap: 8px; }
+    .news-title { font-size: 12px; }
+    .news-hot { font-size: 10px; }
+    .back-link { display: none; }
+    .refresh-btn, .theme-btn { padding: 0 10px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- 顶部标题栏 -->
+  <div class="titlebar">
+    <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+    <div class="title">root@newsnow:~# <span class="cursor">▌</span></div>
+    <div class="titlebar-actions">
+      <button class="theme-btn" id="themeBtn" title="切换明/暗主题">🌙</button>
+      <button class="refresh-btn" id="refreshBtn" title="强制刷新（绕过缓存）">
+        <span id="refreshIcon">⟳</span><span>刷新</span>
+      </button>
+      <a href="search.html" class="back-link" title="搜索页">搜索</a>
+      <a href="index.html" class="back-link" title="返回资源站">← 资源站</a>
+    </div>
+  </div>
+
+  <!-- 源切换 -->
+  <div class="sources" id="sources"></div>
+
+  <!-- 主面板 -->
+  <div class="main-panel">
+    <div class="panel-head">
+      <span class="pip">▸</span>
+      <span id="srcLabel">加载中</span>
+      <span class="update-time" id="updateTime"></span>
+    </div>
+    <div id="listBox">
+      <div class="status"><span class="spin">⟳</span>正在拉取热点数据...</div>
+    </div>
+  </div>
+
+  <!-- 页脚说明 -->
+  <div class="footer-note">
+    <b>// 数据源</b>：聚合自公开热点 API（DailyHotApi），缓存 30 分钟，点击「刷新」可强制更新。<br>
+    <b>// 说明</b>：本页仅做热点聚合展示，点击条目跳转至原平台。如某源长期加载失败，可能是接口变更或限流，请稍后再试。<br>
+    <b>// 项目</b>：<a href="https://github.com/imsyy/DailyHotApi" target="_blank" rel="noopener">DailyHotApi</a> · <a href="https://github.com/ourongxing/newsnow" target="_blank" rel="noopener">NewsNow</a>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // === 数据源配置 ===
+  // 使用 metingapi 镜像（CORS 友好），主备双源
+  const SOURCES = [
+    { id: 'weibo',     name: '微博',     api: 'https://api-hot.201866.xyz/weibo' },
+    { id: 'zhihu',     name: '知乎',     api: 'https://api-hot.201866.xyz/zhihu' },
+    { id: 'bilibili',  name: 'B站',      api: 'https://api-hot.201866.xyz/bilibili' },
+    { id: 'douyin',    name: '抖音',     api: 'https://api-hot.201866.xyz/douyin' },
+    { id: 'baidu',     name: '百度',     api: 'https://api-hot.201866.xyz/baidu' },
+    { id: 'toutiao',   name: '头条',     api: 'https://api-hot.201866.xyz/toutiao' },
+    { id: '163',       name: '网易',     api: 'https://api-hot.201866.xyz/163' },
+    { id: 'ithome',    name: 'IT之家',   api: 'https://api-hot.201866.xyz/ithome' },
+    { id: 'sspai',     name: '少数派',   api: 'https://api-hot.201866.xyz/sspai' },
+    { id: 'thepaper',  name: '澎湃',     api: 'https://api-hot.201866.xyz/thepaper' }
+  ];
+
+  const CACHE_PREFIX = 'newsnow_cache_';
+  const CACHE_TTL = 30 * 60 * 1000; // 30 分钟
+  let currentSource = SOURCES[0].id;
+  let abortCtrl = null;
+
+  // === 主题切换 ===
+  const themeBtn = document.getElementById('themeBtn');
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    themeBtn.textContent = t === 'light' ? '☀' : '🌙';
+    themeBtn.title = t === 'light' ? '切换到暗色' : '切换到亮色';
+  }
+  applyTheme(localStorage.getItem('n0-theme') || 'dark');
+  themeBtn.addEventListener('click', function() {
+    const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    localStorage.setItem('n0-theme', next);
+    applyTheme(next);
+  });
+
+  // === 渲染源按钮 ===
+  const sourcesBox = document.getElementById('sources');
+  SOURCES.forEach(function(src) {
+    const btn = document.createElement('button');
+    btn.className = 'src-btn' + (src.id === currentSource ? ' active' : '');
+    btn.dataset.id = src.id;
+    btn.textContent = src.name;
+    btn.addEventListener('click', function() {
+      if (src.id === currentSource) return;
+      currentSource = src.id;
+      document.querySelectorAll('.src-btn').forEach(function(b) {
+        b.classList.toggle('active', b.dataset.id === src.id);
+      });
+      loadSource(false);
+    });
+    sourcesBox.appendChild(btn);
+  });
+
+  // === 列表渲染 ===
+  const listBox = document.getElementById('listBox');
+  const srcLabel = document.getElementById('srcLabel');
+  const updateTime = document.getElementById('updateTime');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const refreshIcon = document.getElementById('refreshIcon');
+
+  function renderSkeleton() {
+    let html = '';
+    for (let i = 0; i < 15; i++) {
+      html += '<div class="skeleton-item">' +
+              '<div class="skeleton-rank"></div>' +
+              '<div class="skeleton-title"></div>' +
+              '<div class="skeleton-hot"></div>' +
+              '</div>';
+    }
+    listBox.innerHTML = html;
+  }
+
+  function renderList(items, srcName) {
+    if (!items || !items.length) {
+      listBox.innerHTML = '<div class="status">// 暂无数据</div>';
+      return;
+    }
+    const frag = document.createDocumentFragment();
+    const ul = document.createElement('ul');
+    ul.className = 'news-list';
+    items.forEach(function(item, idx) {
+      const li = document.createElement('a');
+      li.className = 'news-item';
+      li.href = item.url || item.mobileUrl || '#';
+      li.target = '_blank';
+      li.rel = 'noopener noreferrer';
+      const rank = document.createElement('span');
+      rank.className = 'rank';
+      rank.textContent = String(idx + 1).padStart(2, '0');
+      const title = document.createElement('span');
+      title.className = 'news-title';
+      title.textContent = item.title;
+      li.appendChild(rank);
+      li.appendChild(title);
+      if (item.hot) {
+        const hot = document.createElement('span');
+        hot.className = 'news-hot';
+        hot.textContent = item.hot;
+        li.appendChild(hot);
+      }
+      const arrow = document.createElement('span');
+      arrow.className = 'news-arrow';
+      arrow.textContent = '→';
+      li.appendChild(arrow);
+      ul.appendChild(li);
+    });
+    listBox.innerHTML = '';
+    listBox.appendChild(ul);
+  }
+
+  function formatTime(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    const pad = function(n) { return String(n).padStart(2, '0'); };
+    return '更新于 ' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+
+  function getCache(srcId) {
+    try {
+      const raw = localStorage.getItem(CACHE_PREFIX + srcId);
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      if (Date.now() - obj.ts > CACHE_TTL) return null;
+      return obj;
+    } catch (e) { return null; }
+  }
+  function setCache(srcId, data) {
+    try {
+      localStorage.setItem(CACHE_PREFIX + srcId, JSON.stringify({ ts: Date.now(), data: data }));
+    } catch (e) {}
+  }
+
+  function loadSource(force) {
+    const src = SOURCES.filter(function(s) { return s.id === currentSource; })[0];
+    if (!src) return;
+    srcLabel.innerHTML = '热点 // <span class="src-name">' + src.name + '</span>';
+
+    // 先用缓存
+    const cached = getCache(src.id);
+    if (cached && !force) {
+      renderList(cached.data, src.name);
+      updateTime.textContent = formatTime(cached.ts) + ' (缓存)';
+      return;
+    }
+
+    // 取消上一个请求
+    if (abortCtrl) { try { abortCtrl.abort(); } catch (e) {} }
+    abortCtrl = new AbortController();
+
+    renderSkeleton();
+    refreshBtn.classList.add('loading');
+    refreshIcon.classList.add('spin');
+
+    fetch(src.api, { signal: abortCtrl.signal, headers: { 'Accept': 'application/json' } })
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(json) {
+        const data = (json && json.data) ? json.data : [];
+        if (!data.length) throw new Error('空数据');
+        setCache(src.id, data);
+        renderList(data, src.name);
+        updateTime.textContent = formatTime(Date.now());
+      })
+      .catch(function(err) {
+        if (err.name === 'AbortError') return;
+        // 失败回退到缓存（即使过期）
+        const fallback = (function() {
+          try {
+            const raw = localStorage.getItem(CACHE_PREFIX + src.id);
+            return raw ? JSON.parse(raw) : null;
+          } catch (e) { return null; }
+        })();
+        if (fallback && fallback.data) {
+          renderList(fallback.data, src.name);
+          updateTime.textContent = formatTime(fallback.ts) + ' (缓存·网络失败)';
+        } else {
+          listBox.innerHTML = '<div class="status error">// 拉取失败：' + (err.message || '网络错误') + '<br>// 可点击「刷新」重试，或稍后再试</div>';
+          updateTime.textContent = '';
+        }
+      })
+      .finally(function() {
+        refreshBtn.classList.remove('loading');
+        refreshIcon.classList.remove('spin');
+      });
+  }
+
+  refreshBtn.addEventListener('click', function() {
+    loadSource(true);
+  });
+
+  // 首次加载
+  loadSource(false);
+
+  // 每 5 分钟检查一次（若有新缓存需求）
+  setInterval(function() { loadSource(false); }, 5 * 60 * 1000);
+})();
+</script>
+</body>
+</html>
