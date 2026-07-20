@@ -245,6 +245,55 @@
     .workspace { grid-template-columns: 1fr; }
     .io-box { min-height: 200px; }
   }
+
+  /* === JSON 树状视图（折叠 + 层级颜色）=== */
+  .json-tree {
+    background: var(--bg-2); border: 1px solid var(--border-bright);
+    color: var(--fg); font-family: var(--mono); font-size: 12.5px;
+    line-height: 1.7; padding: 12px 14px;
+    min-height: 280px; max-height: 640px; overflow: auto;
+    white-space: pre-wrap; word-break: break-all;
+    tab-size: 2;
+  }
+  .json-tree .jt-row { display: block; }
+  .json-tree .jt-toggle {
+    display: inline-block; width: 16px; cursor: pointer;
+    color: var(--fg-muted); user-select: none;
+    text-align: center; transition: transform 0.1s;
+  }
+  .json-tree .jt-toggle.collapsed::before { content: '▸'; }
+  .json-tree .jt-toggle.expanded::before { content: '▾'; }
+  .json-tree .jt-toggle.leaf::before { content: '·'; cursor: default; color: var(--fg-muted); }
+  .json-tree .jt-key { color: var(--cyan); }
+  .json-tree .jt-colon { color: var(--fg-muted); margin-right: 4px; }
+  .json-tree .jt-string { color: var(--neon); }
+  .json-tree .jt-number { color: var(--yellow); }
+  .json-tree .jt-bool { color: var(--orange); }
+  .json-tree .jt-null { color: var(--red); }
+  .json-tree .jt-bracket { color: var(--fg-dim); }
+  .json-tree .jt-comma { color: var(--fg-muted); }
+  .json-tree .jt-children { margin-left: 20px; }
+  .json-tree .jt-children.hidden { display: none; }
+  .json-tree .jt-preview {
+    color: var(--fg-muted); font-style: italic;
+    margin-left: 6px; font-size: 11px;
+  }
+  /* 层级颜色（每个 .jt-row 按深度套背景色左边框）*/
+  .json-tree .jt-row[data-depth="0"] { border-left: 2px solid transparent; }
+  .json-tree .jt-row[data-depth="1"] { border-left: 2px solid rgba(0,255,156,0.6); }
+  .json-tree .jt-row[data-depth="2"] { border-left: 2px solid rgba(255,210,63,0.6); }
+  .json-tree .jt-row[data-depth="3"] { border-left: 2px solid rgba(74,216,230,0.6); }
+  .json-tree .jt-row[data-depth="4"] { border-left: 2px solid rgba(255,107,53,0.6); }
+  .json-tree .jt-row[data-depth="5"] { border-left: 2px solid rgba(255,46,99,0.6); }
+  .json-tree .jt-row[data-depth="6"] { border-left: 2px solid rgba(155,89,182,0.6); }
+  .json-tree .jt-row[data-depth="7"],
+  .json-tree .jt-row[data-depth="8"],
+  .json-tree .jt-row[data-depth="9"] { border-left: 2px solid rgba(0,255,156,0.4); }
+  :root[data-theme="light"] .json-tree .jt-row[data-depth="1"] { border-left-color: #00875a; }
+  :root[data-theme="light"] .json-tree .jt-row[data-depth="2"] { border-left-color: #c79a00; }
+  :root[data-theme="light"] .json-tree .jt-row[data-depth="3"] { border-left-color: #2a9aa8; }
+  :root[data-theme="light"] .json-tree .jt-row[data-depth="4"] { border-left-color: #c8542e; }
+  :root[data-theme="light"] .json-tree .jt-row[data-depth="5"] { border-left-color: #c72350; }
 </style>
 </head>
 <body>
@@ -298,18 +347,17 @@
       <!-- JSON 格式化 -->
       <div class="panel active" id="panel-json">
         <div class="panel-title">JSON 格式化</div>
-        <div class="panel-desc">美化 / 压缩 / 转义 / 校验 JSON。支持嵌套对象与数组。</div>
+        <div class="panel-desc">树状层级展示 + 点击折叠 / 展开。压缩 / 转义 / 校验仍输出纯文本。</div>
         <div class="actions">
           <button class="btn primary" data-act="json-beautify">美化</button>
           <button class="btn" data-act="json-minify">压缩</button>
           <button class="btn" data-act="json-escape">转义</button>
           <button class="btn" data-act="json-unescape">去转义</button>
           <button class="btn" data-act="json-validate">校验</button>
+          <button class="btn" data-act="json-collapse-all">全部折叠</button>
+          <button class="btn" data-act="json-expand-all">全部展开</button>
           <button class="btn ghost" data-act="copy-out">复制结果</button>
           <button class="btn ghost" data-act="clear-in">清空</button>
-        </div>
-        <div class="opts">
-          <label>缩进：<input type="number" id="json-indent" value="2" min="0" max="8" style="width:50px" /></label>
         </div>
         <div class="workspace">
           <div class="pane">
@@ -317,8 +365,8 @@
             <textarea class="io-box" id="json-in" placeholder='{"name":"n0range","tags":["a","b"],"nested":{"k":1}}'></textarea>
           </div>
           <div class="pane">
-            <div class="pane-label"><b>OUTPUT</b> <span class="hint">结果</span></div>
-            <textarea class="io-box io-output" id="json-out" readonly></textarea>
+            <div class="pane-label"><b>OUTPUT</b> <span class="hint">点击 ▾/▸ 折叠层级</span></div>
+            <div class="json-tree" id="json-out"></div>
           </div>
         </div>
       </div>
@@ -726,6 +774,17 @@
 
   // === 通用按钮分发（按 data-act）===
   document.body.addEventListener('click', function(e) {
+    // JSON 树折叠/展开点击
+    const tog = e.target.closest('.jt-toggle');
+    if (tog && (tog.classList.contains('expanded') || tog.classList.contains('collapsed'))) {
+      const isExpanded = tog.classList.contains('expanded');
+      tog.classList.toggle('expanded');
+      tog.classList.toggle('collapsed');
+      const next = tog.parentElement.nextElementSibling;
+      if (next && next.classList.contains('jt-children')) next.classList.toggle('hidden');
+      return;
+    }
+
     const btn = e.target.closest('[data-act]');
     if (!btn) return;
     const act = btn.dataset.act;
@@ -736,43 +795,161 @@
     }
   });
 
+  // === 输出辅助：支持树容器和文本两种模式 ===
+  function setOutText(container, text) {
+    // 将树容器重置为纯文本展示
+    container.className = 'json-tree'; // 保留边框样式
+    container.textContent = text;
+  }
+
+  // === JSON 树渲染 ===
+  function renderJsonTree(container, data) {
+    container.className = 'json-tree';
+    container.innerHTML = '';
+    container.appendChild(buildJsonNode(data, 0, '', true));
+  }
+
+  function buildJsonNode(value, depth, key, isLast) {
+    const row = document.createElement('div');
+    row.className = 'jt-row';
+    row.dataset.depth = depth;
+
+    const isArr = Array.isArray(value);
+    const isObj = value !== null && typeof value === 'object' && !isArr;
+    const hasChildren = isArr || isObj;
+    const childCount = hasChildren ? (isArr ? value.length : Object.keys(value).length) : 0;
+
+    // 折叠箭头
+    const toggle = document.createElement('span');
+    toggle.className = 'jt-toggle';
+    if (hasChildren && childCount > 0) {
+      toggle.classList.add('expanded');
+    } else {
+      toggle.classList.add('leaf');
+    }
+    row.appendChild(toggle);
+
+    // key
+    if (key) {
+      const keyEl = document.createElement('span');
+      keyEl.className = 'jt-key';
+      keyEl.textContent = /["\\]/.test(key) ? JSON.stringify(key) : ('"' + key + '"');
+      row.appendChild(keyEl);
+      const colon = document.createElement('span');
+      colon.className = 'jt-colon';
+      colon.textContent = ':';
+      row.appendChild(colon);
+    }
+
+    // 值 / 括号
+    if (!hasChildren) {
+      // 叶子节点
+      const valEl = document.createElement('span');
+      const v = value;
+      if (v === null) { valEl.className = 'jt-null'; valEl.textContent = 'null'; }
+      else if (typeof v === 'string') { valEl.className = 'jt-string'; valEl.textContent = JSON.stringify(v); }
+      else if (typeof v === 'number') { valEl.className = 'jt-number'; valEl.textContent = String(v); }
+      else if (typeof v === 'boolean') { valEl.className = 'jt-bool'; valEl.textContent = String(v); }
+      row.appendChild(valEl);
+    } else {
+      const br = document.createElement('span');
+      br.className = 'jt-bracket';
+      br.textContent = isArr ? '[' : '{';
+      row.appendChild(br);
+
+      // 折叠时的预览
+      const preview = document.createElement('span');
+      preview.className = 'jt-preview';
+      preview.textContent = ' // ' + childCount + (isArr ? ' 项' : ' 个键');
+      row.appendChild(preview);
+
+      // 子节点容器
+      const children = document.createElement('div');
+      children.className = 'jt-children';
+      const keys = isArr ? value.map(function(_, i) { return i; }) : Object.keys(value);
+      keys.forEach(function(k, idx) {
+        const child = buildJsonNode(isArr ? value[k] : value[k], depth + 1, isArr ? '' : k, idx === keys.length - 1);
+        children.appendChild(child);
+      });
+      // 闭合括号行
+      const closeRow = document.createElement('div');
+      closeRow.className = 'jt-row';
+      closeRow.dataset.depth = depth;
+      const closeBr = document.createElement('span');
+      closeBr.className = 'jt-bracket';
+      closeBr.textContent = (isArr ? ']' : '}') + (isLast ? '' : ',');
+      closeRow.appendChild(closeBr);
+      children.appendChild(closeRow);
+
+      row.appendChild(children);
+    }
+
+    // 叶子节点行的末尾逗号
+    if (!hasChildren && !isLast) {
+      const comma = document.createElement('span');
+      comma.className = 'jt-comma';
+      comma.textContent = ',';
+      row.appendChild(comma);
+    }
+
+    return row;
+  }
+
+
   function handleAction(act) {
     switch (act) {
       // === JSON ===
       case 'json-beautify': {
-        const indent = parseInt($('json-indent').value, 10) || 2;
         const obj = JSON.parse(getInVal('json'));
-        setOut('json', JSON.stringify(obj, null, indent));
+        renderJsonTree($('json-out'), obj);
         showToast('JSON 已美化');
         break;
       }
       case 'json-minify': {
         const obj = JSON.parse(getInVal('json'));
-        setOut('json', JSON.stringify(obj));
+        setOutText($('json-out'), JSON.stringify(obj));
         showToast('JSON 已压缩');
         break;
       }
       case 'json-escape': {
         const s = getInVal('json');
-        setOut('json', s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t'));
+        setOutText($('json-out'), s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t'));
         showToast('已转义');
         break;
       }
       case 'json-unescape': {
         const s = getInVal('json');
-        setOut('json', s.replace(/\\n/g, '\n').replace(/\\r/g, '\r').replace(/\\t/g, '\t').replace(/\\"/g, '"').replace(/\\\\/g, '\\'));
+        setOutText($('json-out'), s.replace(/\\n/g, '\n').replace(/\\r/g, '\r').replace(/\\t/g, '\t').replace(/\\"/g, '"').replace(/\\\\/g, '\\'));
         showToast('已去转义');
         break;
       }
       case 'json-validate': {
         try {
           JSON.parse(getInVal('json'));
-          setOut('json', '✓ JSON 格式有效');
+          setOutText($('json-out'), '✓ JSON 格式有效');
           showToast('JSON 有效');
         } catch (e) {
-          setOut('json', '✗ 无效：' + e.message);
+          setOutText($('json-out'), '✗ 无效：' + e.message);
           showToast('JSON 无效', true);
         }
+        break;
+      }
+      case 'json-collapse-all': {
+        $('json-out').querySelectorAll('.jt-toggle.expanded').forEach(function(t) {
+          t.classList.remove('expanded'); t.classList.add('collapsed');
+          const next = t.parentElement.nextElementSibling;
+          if (next && next.classList.contains('jt-children')) next.classList.add('hidden');
+        });
+        showToast('已全部折叠');
+        break;
+      }
+      case 'json-expand-all': {
+        $('json-out').querySelectorAll('.jt-toggle.collapsed').forEach(function(t) {
+          t.classList.remove('collapsed'); t.classList.add('expanded');
+          const next = t.parentElement.nextElementSibling;
+          if (next && next.classList.contains('jt-children')) next.classList.remove('hidden');
+        });
+        showToast('已全部展开');
         break;
       }
 
@@ -1001,23 +1178,29 @@
       // === 通用：复制 / 清空 ===
       case 'copy-out': {
         const panel = document.querySelector('.panel.active');
-        const out = panel && panel.querySelector('.io-output');
-        if (!out || !out.value) { showToast('输出为空', true); return; }
-        navigator.clipboard.writeText(out.value).then(function() {
+        // 优先 textarea.io-output，其次 div.json-tree
+        const ta = panel && panel.querySelector('textarea.io-output');
+        const tree = panel && panel.querySelector('.json-tree');
+        let text = '';
+        if (ta && ta.value) text = ta.value;
+        else if (tree && tree.textContent.trim()) text = tree.textContent.trim();
+        if (!text) { showToast('输出为空', true); return; }
+        navigator.clipboard.writeText(text).then(function() {
           showToast('已复制到剪贴板');
         }).catch(function() {
-          out.select();
-          document.execCommand('copy');
-          showToast('已复制');
+          showToast('复制失败，请手动选中复制', true);
         });
         break;
       }
       case 'clear-in': {
         const panel = document.querySelector('.panel.active');
         const ins = panel.querySelectorAll('textarea.io-box:not([readonly])');
-        const outs = panel.querySelectorAll('textarea.io-output');
         ins.forEach(function(t) { t.value = ''; });
-        outs.forEach(function(t) { t.value = ''; });
+        // 清空所有输出：textarea.io-output 和 div.json-tree
+        panel.querySelectorAll('textarea.io-output').forEach(function(t) { t.value = ''; });
+        panel.querySelectorAll('.json-tree').forEach(function(t) { t.innerHTML = ''; t.textContent = ''; });
+        // diff 输出
+        panel.querySelectorAll('.diff-out').forEach(function(t) { t.innerHTML = ''; });
         showToast('已清空');
         break;
       }
