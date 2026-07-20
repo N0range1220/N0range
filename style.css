@@ -654,6 +654,12 @@ body {
 .theme-toggle-icon { pointer-events: none; }
 
 /* 跳转到 DorkHunt 搜索语法生成器 */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
 .nav-link {
   flex-shrink: 0;
   display: flex;
