@@ -112,9 +112,7 @@
     background: var(--panel); border: 1px solid var(--border);
     flex-wrap: wrap;
   }
-  .controls-label {
-    font-size: 11px; color: var(--fg-muted); letter-spacing: 0.5px;
-  }
+  .controls-label { font-size: 11px; color: var(--fg-muted); letter-spacing: 0.5px; }
   .toggle-btn {
     background: var(--bg); border: 1px solid var(--border-bright);
     color: var(--fg-dim);
@@ -122,9 +120,7 @@
     padding: 5px 11px; cursor: pointer; transition: all 0.15s;
   }
   .toggle-btn:hover { color: var(--fg); border-color: var(--neon-dim); }
-  .toggle-btn.active {
-    background: var(--neon); color: #0a0e0a; border-color: var(--neon);
-  }
+  .toggle-btn.active { background: var(--neon); color: #0a0e0a; border-color: var(--neon); }
 
   /* === 卡片网格 === */
   .grid {
@@ -169,8 +165,7 @@
 
   .rank {
     flex-shrink: 0; width: 26px; text-align: center;
-    font-weight: 800; font-size: 13px;
-    color: var(--fg-muted);
+    font-weight: 800; font-size: 13px; color: var(--fg-muted);
   }
   .news-item:nth-child(1) .rank { color: var(--red); }
   .news-item:nth-child(2) .rank { color: var(--orange); }
@@ -255,7 +250,7 @@
     <button class="toggle-btn active" data-limit="10">10</button>
     <button class="toggle-btn" data-limit="20">20</button>
     <button class="toggle-btn" data-limit="50">50</button>
-    <span class="controls-label" style="margin-left:auto">// 缓存 30 分钟 · 点击「刷新」强制更新</span>
+    <span class="controls-label" style="margin-left:auto">// 数据源：各平台官方 API · 缓存 30 分钟</span>
   </div>
 
   <!-- 卡片网格 -->
@@ -263,9 +258,9 @@
 
   <!-- 页脚说明 -->
   <div class="footer-note">
-    <b>// 数据源</b>：聚合自公开热点 API（<a href="https://github.com/imsyy/DailyHotApi" target="_blank" rel="noopener">DailyHotApi</a>），无后端、纯前端拉取，缓存 30 分钟。<br>
-    <b>// 说明</b>：本页参考 <a href="https://github.com/ourongxing/newsnow" target="_blank" rel="noopener">newsnow</a> 设计，仅做热点聚合展示，点击条目跳转至原平台。如某源长期加载失败，可能是接口变更或限流。<br>
-    <b>// 提示</b>：若全部源失败，可能是网络问题或 API 镜像不可用，点击「刷新」重试。
+    <b>// 数据源</b>：直接调用各平台官方热点 API（B站/百度/头条/网易/掘金等），通过公开 CORS 代理转发以绕过浏览器跨域限制。<br>
+    <b>// 说明</b>：本页参考 <a href="https://github.com/ourongxing/newsnow" target="_blank" rel="noopener">newsnow</a> 设计，仅做热点聚合展示，点击条目跳转至原平台。<br>
+    <b>// 提示</b>：若部分源长期失败，可能是该平台接口变更或 CORS 代理不可用，点击「刷新」重试。
   </div>
 </div>
 
@@ -273,32 +268,177 @@
 (function() {
   'use strict';
 
-  // === 数据源配置（多镜像备用，提高可用性）===
-  // 每个源配置多个候选 API，按顺序尝试，第一个成功即用
-  const MIRRORS = [
-    'https://api-hot.201866.xyz',     // 主镜像
-    'https://api.vvhan.com/api/hotlist',  // 韩小韩 API（路径不同，单独处理）
-    'https://api.oioweb.cn/api/common/HotList?type='  // oioweb 备用
+  // === CORS 代理（多备用，按顺序尝试）===
+  // B站官方 API 本身 CORS 友好，无需代理；其他平台需要代理转发
+  const PROXIES = [
+    function(url) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url); },
+    function(url) { return 'https://corsproxy.io/?url=' + encodeURIComponent(url); },
+    function(url) { return 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(url); },
+    function(url) { return 'https://thingproxy.freeboard.io/fetch/' + url; }
   ];
 
-  // 源列表 - 使用 DailyHotApi 风格的路径
+  // === 数据源配置（各平台官方 API）===
   const SOURCES = [
-    { id: 'weibo',    name: '微博',     paths: ['/weibo'] },
-    { id: 'zhihu',    name: '知乎',     paths: ['/zhihu'] },
-    { id: 'bilibili', name: 'B站',      paths: ['/bilibili'] },
-    { id: 'douyin',   name: '抖音',     paths: ['/douyin'] },
-    { id: 'baidu',    name: '百度',     paths: ['/baidu'] },
-    { id: 'toutiao',  name: '头条',     paths: ['/toutiao'] },
-    { id: '163',      name: '网易',     paths: ['/163'] },
-    { id: 'ithome',   name: 'IT之家',   paths: ['/ithome'] },
-    { id: 'juejin',   name: '掘金',     paths: ['/juejin'] },
-    { id: 'csdn',     name: 'CSDN',     paths: ['/csdn'] }
+    {
+      id: 'bilibili',
+      name: 'B站',
+      official: true,           // CORS 友好，无需代理
+      url: 'https://api.bilibili.com/x/web-interface/popular?ps=20&pn=1',
+      parse: function(json) {
+        const list = (json && json.data && json.data.list) || [];
+        return list.map(function(item) {
+          return {
+            title: item.title || '',
+            url: item.short_link || 'https://www.bilibili.com/video/' + item.bvid,
+            hot: item.stat && item.stat.view ? formatNum(item.stat.view) + '观看' : ''
+          };
+        });
+      }
+    },
+    {
+      id: 'baidu',
+      name: '百度',
+      official: true,
+      url: 'https://top.baidu.com/api/board?platform=wise&tab=realtime',
+      parse: function(json) {
+        const list = (json && json.data && json.data.cards && json.data.cards[0] && json.data.cards[0].content) || [];
+        return list.map(function(item) {
+          return {
+            title: item.word || item.query || '',
+            url: item.url || item.rawUrl || ('https://www.baidu.com/s?wd=' + encodeURIComponent(item.word || '')),
+            hot: item.hotScore || ''
+          };
+        });
+      }
+    },
+    {
+      id: 'toutiao',
+      name: '头条',
+      official: true,
+      url: 'https://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc',
+      parse: function(json) {
+        const list = (json && json.data) || [];
+        return list.map(function(item) {
+          return {
+            title: item.Title || '',
+            url: item.Url || item.Link || '#',
+            hot: item.HotValue ? formatNum(item.HotValue) : ''
+          };
+        });
+      }
+    },
+    {
+      id: '163',
+      name: '网易',
+      official: true,
+      url: 'https://m.163.com/fe/api/hot/news/list',
+      parse: function(json) {
+        const list = (json && json.data && json.data.list) || (json && json.data) || [];
+        return list.map(function(item) {
+          return {
+            title: item.title || item.Title || '',
+            url: item.url || item.skipURL || item.link || '#',
+            hot: item.replyCount ? formatNum(item.replyCount) + '评论' : ''
+          };
+        });
+      }
+    },
+    {
+      id: 'juejin',
+      name: '掘金',
+      official: true,
+      method: 'POST',
+      url: 'https://api.juejin.cn/recommend_api/v1/article/recommend_all_feed',
+      body: JSON.stringify({ cursor: '0', limit: 20, sort_type: 7 }),
+      headers: { 'Content-Type': 'application/json' },
+      parse: function(json) {
+        const list = (json && json.data) || [];
+        return list.map(function(item) {
+          const info = item.article_info || item || {};
+          return {
+            title: info.title || '',
+            url: item.article_id ? 'https://juejin.cn/post/' + item.article_id : '#',
+            hot: item.article_info && item.article_info.view_count ? formatNum(item.article_info.view_count) + '阅读' : ''
+          };
+        }).filter(function(x) { return x.title; });
+      }
+    },
+    {
+      id: 'weibo',
+      name: '微博',
+      official: true,
+      // 微博官方 API 需 cookie，改用 RSSHub 公开实例的热搜镜像
+      url: 'https://rsshub.app/weibo/search/hot',
+      isXml: true,
+      parse: function(xmlText) {
+        try {
+          const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+          const items = doc.querySelectorAll('item');
+          const arr = [];
+          items.forEach(function(it, idx) {
+            const title = it.querySelector('title');
+            const link = it.querySelector('link');
+            if (title && title.textContent) {
+              arr.push({
+                title: title.textContent.trim(),
+                url: link ? link.textContent.trim() : '#',
+                hot: ''
+              });
+            }
+          });
+          return arr;
+        } catch (e) { return []; }
+      }
+    },
+    {
+      id: 'zhihu',
+      name: '知乎',
+      official: true,
+      // 知乎官方 API 需鉴权，改用 RSSHub 公开实例
+      url: 'https://rsshub.app/zhihu/hotlist',
+      isXml: true,
+      parse: function(xmlText) {
+        try {
+          const doc = new DOMParser().parseFromString(xmlText, 'text/xml');
+          const items = doc.querySelectorAll('item');
+          const arr = [];
+          items.forEach(function(it) {
+            const title = it.querySelector('title');
+            const link = it.querySelector('link');
+            if (title && title.textContent) {
+              arr.push({
+                title: title.textContent.trim(),
+                url: link ? link.textContent.trim() : '#',
+                hot: ''
+              });
+            }
+          });
+          return arr;
+        } catch (e) { return []; }
+      }
+    }
   ];
 
-  const CACHE_PREFIX = 'newsnow_v2_';
+  const CACHE_PREFIX = 'newsnow_v3_';
   const CACHE_TTL = 30 * 60 * 1000;
   let limit = 10;
   let refreshInFlight = false;
+
+  // === 工具函数 ===
+  function formatNum(n) {
+    n = parseInt(n, 10) || 0;
+    if (n >= 100000000) return (n / 100000000).toFixed(1) + '亿';
+    if (n >= 10000) return (n / 10000).toFixed(1) + '万';
+    return String(n);
+  }
+
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"']/g, function(c) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+  function escapeAttr(s) { return escapeHtml(s).replace(/`/g, '&#96;'); }
 
   // === 主题 ===
   const themeBtn = document.getElementById('themeBtn');
@@ -320,10 +460,7 @@
       limit = parseInt(btn.dataset.limit, 10);
       document.querySelectorAll('.toggle-btn').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
-      // 重新渲染所有已加载的卡片
-      SOURCES.forEach(function(src) {
-        renderCardFromCache(src);
-      });
+      SOURCES.forEach(function(src) { renderCardFromCache(src); });
     });
   });
 
@@ -333,8 +470,6 @@
   const totalCountEl = document.getElementById('totalCount');
   totalCountEl.textContent = SOURCES.length;
 
-  // 创建所有卡片骨架
-  const cardEls = {};
   SOURCES.forEach(function(src) {
     const card = document.createElement('div');
     card.className = 'card';
@@ -346,7 +481,6 @@
       '</div>' +
       '<div class="card-list" id="list-' + src.id + '">' + renderSkeleton() + '</div>';
     grid.appendChild(card);
-    cardEls[src.id] = card;
   });
 
   function renderSkeleton() {
@@ -384,7 +518,7 @@
     let html = '';
     slice.forEach(function(item, idx) {
       const rank = String(idx + 1).padStart(2, '0');
-      const url = item.url || item.mobileUrl || '#';
+      const url = item.url || '#';
       const hot = item.hot ? '<span class="news-hot">' + escapeHtml(item.hot) + '</span>' : '';
       html += '<a class="news-item" href="' + escapeAttr(url) + '" target="_blank" rel="noopener noreferrer">' +
               '<span class="rank">' + rank + '</span>' +
@@ -409,19 +543,7 @@
 
   function renderCardFromCache(src) {
     const cached = getCache(src.id);
-    if (cached && cached.data) {
-      renderCard(src, cached.data, true);
-    }
-  }
-
-  function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s).replace(/[&<>"']/g, function(c) {
-      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
-    });
-  }
-  function escapeAttr(s) {
-    return escapeHtml(s).replace(/`/g, '&#96;');
+    if (cached && cached.data) renderCard(src, cached.data, true);
   }
 
   function getCache(srcId) {
@@ -445,9 +567,8 @@
     } catch (e) {}
   }
 
-  // === 拉取单个源（多镜像备用）===
+  // === 拉取单个源 ===
   function fetchSource(src, force) {
-    // 先用缓存
     if (!force) {
       const cached = getCache(src.id);
       if (cached) {
@@ -456,14 +577,12 @@
       }
     }
 
-    // 按顺序尝试镜像
-    return tryMirrors(src, 0)
+    return tryFetch(src, 0)
       .then(function(data) {
         setCache(src.id, data);
         renderCard(src, data, false);
       })
       .catch(function(err) {
-        // 失败回退到任何缓存
         const fallback = getCacheAny(src.id);
         if (fallback && fallback.data) {
           renderCard(src, fallback.data, true);
@@ -478,48 +597,45 @@
       });
   }
 
-  function tryMirrors(src, idx) {
-    if (idx >= MIRRORS.length) {
-      return Promise.reject(new Error('所有镜像失败'));
-    }
-    const base = MIRRORS[idx];
-    let url;
-    if (base.indexOf('vvhan.com') > -1) {
-      // 韩小韩 API 路径不同
-      const map = { weibo:'wbHot', zhihu:'zhot', bilibili:'biliHot', douyin:'dyHot', baidu:'baiduHot', toutiao:'toutiaoHot', 163:'wangyiHot', ithome:'itHot', juejin:'juejinHot', csdn:'csdnHot' };
-      url = base + '/' + (map[src.id] || 'wbHot');
-    } else if (base.indexOf('oioweb') > -1) {
-      url = base + src.id;
-    } else {
-      url = base + src.paths[0];
+  // 尝试拉取：B站官方直接请求，其他平台按代理顺序尝试
+  function tryFetch(src, proxyIdx) {
+    // B站官方 CORS 友好，直接请求
+    if (src.id === 'bilibili') {
+      return fetchOfficial(src);
     }
 
-    return fetch(url, { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined })
+    // 其他平台：依次尝试代理
+    if (proxyIdx >= PROXIES.length) {
+      return Promise.reject(new Error('所有代理失败'));
+    }
+
+    const proxiedUrl = PROXIES[proxyIdx](src.url);
+    return fetchOfficial(src, proxiedUrl)
+      .catch(function() {
+        return tryFetch(src, proxyIdx + 1);
+      });
+  }
+
+  function fetchOfficial(src, useUrl) {
+    const finalUrl = useUrl || src.url;
+    const opts = {
+      headers: Object.assign({ 'Accept': src.isXml ? 'application/xml,text/xml' : 'application/json' }, src.headers || {}),
+      signal: AbortSignal.timeout ? AbortSignal.timeout(10000) : undefined
+    };
+    if (src.method === 'POST') {
+      opts.method = 'POST';
+      if (src.body) opts.body = src.body;
+    }
+
+    return fetch(finalUrl, opts)
       .then(function(r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
+        return src.isXml ? r.text() : r.json();
       })
-      .then(function(json) {
-        // 适配不同 API 响应格式
-        let data = [];
-        if (Array.isArray(json)) data = json;
-        else if (json && Array.isArray(json.data)) data = json.data;
-        else if (json && json.data && Array.isArray(json.data.data)) data = json.data.data;
-        else if (json && json.result && Array.isArray(json.result)) data = json.result;
-        // 归一化字段
-        data = data.map(function(item) {
-          return {
-            title: item.title || item.name || '',
-            url: item.url || item.link || item.mobileUrl || item.urlpc || '#',
-            hot: item.hot ? String(item.hot) : (item.hotText || item.desc || '')
-          };
-        }).filter(function(x) { return x.title; });
-        if (!data.length) throw new Error('空数据');
+      .then(function(raw) {
+        const data = src.parse(raw);
+        if (!data || !data.length) throw new Error('空数据');
         return data;
-      })
-      .catch(function(err) {
-        // 当前镜像失败，尝试下一个
-        return tryMirrors(src, idx + 1);
       });
   }
 
@@ -541,14 +657,8 @@
     });
   }
 
-  refreshBtn.addEventListener('click', function() {
-    refreshAll(true);
-  });
-
-  // 首次加载
+  refreshBtn.addEventListener('click', function() { refreshAll(true); });
   refreshAll(false);
-
-  // 每 10 分钟静默刷新
   setInterval(function() { refreshAll(false); }, 10 * 60 * 1000);
 })();
 </script>
