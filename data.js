@@ -1,6 +1,4 @@
 /**
- * 云盘链接数据（由 链接合集.xlsx 自动生成）
- * 共 800 条资源，覆盖 7 个分类。
  *
  * 字段说明：
  *   title      : 资源标题
@@ -72,8 +70,8 @@ var LINKS_DATA = [
   { title: "21世纪大君夫人 2026", url: "https://pan.quark.cn/s/582e8a91293e", category: "剧集", source: "夸克网盘" },
   { title: "A 爱，死亡和机器人 1-4季 内封+内嵌字幕 4K+1080P", url: "https://pan.quark.cn/s/b1e52da3f8d1", category: "剧集", source: "夸克网盘" },
   { title: "B 别对我说谎lie to me　1-3季", url: "https://pan.quark.cn/s/fa6352578fa8", category: "剧集", source: "夸克网盘" },
-  { title: "C菜鸟伙房兵 2026", url: "https://pan.quark.cn/s/be60e62325ab", category: "剧集", source: "夸克网盘" },
-  { title: "F辐射2（2025）", url: "https://pan.quark.cn/s/490eaf2a1660", category: "剧集", source: "夸克网盘" },
+  { title: "C 菜鸟伙房兵 2026", url: "https://pan.quark.cn/s/be60e62325ab", category: "剧集", source: "夸克网盘" },
+  { title: "F 辐射2（2025）", url: "https://pan.quark.cn/s/490eaf2a1660", category: "剧集", source: "夸克网盘" },
   { title: "G 哥谭 1-5季合集 1080P 内嵌简英字幕", url: "https://pan.quark.cn/s/8b14807efd1f", category: "剧集", source: "夸克网盘" },
   { title: "G 怪奇物语 1-4季", url: "https://pan.quark.cn/s/22eeb23041b4", category: "剧集", source: "夸克网盘" },
   { title: "H 黑袍纠察队（2019）1-4季+V世代+劣迹 4K", url: "https://pan.quark.cn/s/01cba586adf7", category: "剧集", source: "夸克网盘" },
@@ -81,11 +79,11 @@ var LINKS_DATA = [
   { title: "J 绝命毒师 1-5季 附续命之徒+绝不折中 内封字幕", url: "https://pan.quark.cn/s/1533437ec138", category: "剧集", source: "夸克网盘" },
   { title: "L 轮到你了（2019）全20集 内封繁中字幕 1080P", url: "https://pan.quark.cn/s/603ea4cbde56", category: "剧集", source: "夸克网盘" },
   { title: "M 摩登家庭1-11季 铂金珍藏版", url: "https://pan.quark.cn/s/4ba9d89c5e9c", category: "剧集", source: "夸克网盘" },
-  { title: "Q权欲之巅", url: "https://pan.quark.cn/s/315286758ec5", category: "剧集", source: "夸克网盘" },
+  { title: "Q 权欲之巅", url: "https://pan.quark.cn/s/315286758ec5", category: "剧集", source: "夸克网盘" },
   { title: "S 神盾局特工 1-7季", url: "https://pan.quark.cn/s/ba2d9ff4c74c", category: "剧集", source: "夸克网盘" },
-  { title: "T铁拳教育 2026", url: "https://pan.quark.cn/s/6b3a22eeb437", category: "剧集", source: "夸克网盘" },
-  { title: "W我的天才女友1-4季（2018-2024）1080P", url: "https://pan.quark.cn/s/7fe1dbc12db2", category: "剧集", source: "夸克网盘" },
-  { title: "W我的王室死对头", url: "https://pan.quark.cn/s/863490aeb1c3", category: "剧集", source: "夸克网盘" },
+  { title: "T 铁拳教育 2026", url: "https://pan.quark.cn/s/6b3a22eeb437", category: "剧集", source: "夸克网盘" },
+  { title: "W 我的天才女友1-4季（2018-2024）1080P", url: "https://pan.quark.cn/s/7fe1dbc12db2", category: "剧集", source: "夸克网盘" },
+  { title: "W 我的王室死对头", url: "https://pan.quark.cn/s/863490aeb1c3", category: "剧集", source: "夸克网盘" },
   { title: "X 行骗天下JP 电影+电视剧合集 内封+内嵌字幕 1080P", url: "https://pan.quark.cn/s/76ddb2c0a4a3", category: "剧集", source: "夸克网盘" },
   { title: "X《小谢尔顿》（2017-2024）1-7季全 1080P 中字", url: "https://pan.quark.cn/s/e3d5563c37bf", category: "剧集", source: "夸克网盘" },
   { title: "Y 鱿鱼游戏 1-3季 硬字幕+软字幕 4K+1080P", url: "https://pan.quark.cn/s/157420868fa6", category: "剧集", source: "夸克网盘" },
@@ -109,7 +107,6 @@ var LINKS_DATA = [
   { title: "夜魔侠", url: "https://pan.quark.cn/s/60bc6c2e2b4a", category: "剧集", source: "夸克网盘" },
   { title: "失控 Driven 第1-3季", url: "https://pan.quark.cn/s/e68dd6e8b663", category: "剧集", source: "夸克网盘" },
   { title: "幸福伽菜子(加奈子)的快乐杀手生活 (2025) 全6集 日语中字  喜剧动作", url: "https://pan.quark.cn/s/714312da463e", category: "剧集", source: "夸克网盘", note: "附漫画" },
-  { title: "心灵的声音2016", url: "https://pan.quark.cn/s/41d0ba7686c7", category: "剧集", source: "夸克网盘" },
   { title: "心里的声音 마음의 소리 (2016)", url: "https://pan.quark.cn/s/b9714b2ecdf4", category: "剧集", source: "夸克网盘" },
   { title: "恋恋洗衣店 みなと商事コインランドリー 1-2季", url: "https://pan.quark.cn/s/5032f16a52f9", category: "剧集", source: "夸克网盘" },
   { title: "恋爱何必认真？ 恋なんて、本気でやってどうするの？ (2022)", url: "https://pan.quark.cn/s/03e6baa22daf", category: "剧集", source: "夸克网盘" },
@@ -130,7 +127,7 @@ var LINKS_DATA = [
   { title: "超感猎杀 1-2季", url: "https://pan.quark.cn/s/d55ea895eedf", category: "剧集", source: "夸克网盘" },
   { title: "达顿牧场", url: "https://pan.quark.cn/s/dacd4f12a571", category: "剧集", source: "夸克网盘" },
   { title: "逃避虽可耻但有用 逃げるは恥だが役に立つ (2016)", url: "https://pan.quark.cn/s/715a058c7fb2", category: "剧集", source: "夸克网盘" },
-  { title: "韩剧-S神与律师事务所", url: "https://pan.quark.cn/s/1bf5f0f761e9", category: "剧集", source: "夸克网盘" },
+  { title: "韩剧-死神与律师事务所", url: "https://pan.quark.cn/s/1bf5f0f761e9", category: "剧集", source: "夸克网盘" },
   { title: "风骚律师 1-6季", url: "https://pan.quark.cn/s/cdc5847bf4e6", category: "剧集", source: "夸克网盘" },
   { title: "黑镜", url: "https://pan.quark.cn/s/770a2f701b0c", category: "剧集", source: "夸克网盘" },
   // --- 少量电影 ---
@@ -155,7 +152,7 @@ var LINKS_DATA = [
   { title: "Charlotte 夏洛特", url: "https://pan.quark.cn/s/7553283fe271", category: "动漫", source: "夸克网盘" },
   { title: "Citrus~柑橘味香气~", url: "https://pan.quark.cn/s/60cd88bad95d", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "Clannad 团子大家族", url: "https://pan.quark.cn/s/0ef4a8dceaac", category: "动漫", source: "夸克网盘" },
-  { title: "Clevatess-魔-S之-王-与Y儿.与-.S之-勇-者-", url: "https://pan.quark.cn/s/65b12b301c56", category: "动漫", source: "夸克网盘" },
+  { title: "Clevatess-魔兽之王与婴儿与尸之勇者", url: "https://pan.quark.cn/s/65b12b301c56", category: "动漫", source: "夸克网盘" },
   { title: "DARK MOON -黑之月：月之祭坛-", url: "https://pan.quark.cn/s/ee831bf12643", category: "动漫", source: "夸克网盘" },
   { title: "DARLING in the FRANXX（国家队 比翼之吻 ）", url: "https://pan.quark.cn/s/cb20ec2e07cf", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "EVA 新世纪福音战士", url: "https://pan.quark.cn/s/27b1182ea60c", category: "动漫", source: "夸克网盘" },
@@ -264,7 +261,7 @@ var LINKS_DATA = [
   { title: "地狱少女", url: "https://pan.quark.cn/s/abe7d3f43871", category: "动漫", source: "夸克网盘" },
   { title: "地狱模式 ～喜欢速通游戏的玩家在废设定异世界无双～", url: "https://pan.quark.cn/s/370f80d00889", category: "动漫", source: "夸克网盘" },
   { title: "地缚少年花子君", url: "https://pan.quark.cn/s/95bfffae2965", category: "动漫", source: "夸克网盘", note: "附漫画" },
-  { title: "坂.｜本.R.常／坂.本｜Days", url: "https://pan.quark.cn/s/b804c5c3c9c9", category: "动漫", source: "夸克网盘", note: "附漫画" },
+  { title: "坂本日常／坂本 Days", url: "https://pan.quark.cn/s/b804c5c3c9c9", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "坂本日常／坂本Days", url: "https://pan.quark.cn/s/e99643cfd7d3", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "埃罗芒阿老师", url: "https://pan.quark.cn/s/814bd8cc52e3", category: "动漫", source: "夸克网盘" },
   { title: "堀与宫村", url: "https://pan.quark.cn/s/fd0c16bff3d0", category: "动漫", source: "夸克网盘", note: "附漫画" },
@@ -503,7 +500,7 @@ var LINKS_DATA = [
   { title: "高校奇面组", url: "https://pan.quark.cn/s/61c69c28464a", category: "动漫", source: "夸克网盘" },
   { title: "鬼泣 Devil May Cry (2025)", url: "https://pan.quark.cn/s/7e9ec1248b2e", category: "动漫", source: "夸克网盘" },
   { title: "鬼灭之刃", url: "https://pan.quark.cn/s/d41906a069c8", category: "动漫", source: "夸克网盘", note: "附漫画" },
-  { title: "魔.法.禁.书.目.录", url: "https://pan.quark.cn/s/6683a2d41b45", category: "动漫", source: "夸克网盘" },
+  { title: "魔法禁书目录", url: "https://pan.quark.cn/s/6683a2d41b45", category: "动漫", source: "夸克网盘" },
   { title: "魔兵传奇", url: "https://pan.quark.cn/s/7fbc219a4cb5", category: "动漫", source: "夸克网盘" },
   { title: "魔卡少女樱", url: "https://pan.quark.cn/s/779b2961c518", category: "动漫", source: "夸克网盘" },
   { title: "魔女与使魔／魔女守护者", url: "https://pan.quark.cn/s/33aa4e7d02db", category: "动漫", source: "夸克网盘" },
