@@ -524,7 +524,7 @@ var LINKS_DATA = [
   { title: "高校舰队", url: "https://pan.quark.cn/s/ae21ebb485e8", category: "动漫", source: "夸克网盘" },
   { title: "歌之王子殿下", url: "https://pan.quark.cn/s/c5e6a89f461c", category: "动漫", source: "夸克网盘" },
 
-  // ===== 学习资料 (200) =====
+  // ===== 学习资料 (201) =====
   { title: "2024年二级建造师全网最全电子版资料", url: "https://pan.quark.cn/s/b5390c103cfc", category: "学习资料", source: "夸克网盘" },
   { title: "2025《毕业论文、毕业答辩》精选资料汇总", url: "https://pan.quark.cn/s/78837394da00", category: "学习资料", source: "夸克网盘" },
   { title: "24年中级经济师网课【基础】", url: "https://pan.quark.cn/s/8d6f08c78475", category: "学习资料", source: "夸克网盘" },
@@ -730,8 +730,10 @@ var LINKS_DATA = [
   { title: "CTF特训营：技术详解、解题方法与竞赛技巧.pdf", url: "https://pan.quark.cn/s/99916961ca6a", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
   { title: "CTF特训营.pdf", url: "https://pan.quark.cn/s/64e2109f033e", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
   { title: "ARM汇编.pdf", url: "https://pan.quark.cn/s/fc121f416d86", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
+  // --- 各类课程 ---
+  { title: "【英语四六级】合集", url: "https://pan.quark.cn/s/305158ade614", category: "学习资料", source: "夸克网盘", section: "各类课程" },
 
-  // ===== 安卓软件 (10) =====
+  // ===== 安卓软件 (11) =====
   { title: "MT管理器安卓逆向工具 MT2.18.4.apk", url: "https://pan.quark.cn/s/2734e97e6b2e", category: "安卓软件", source: "夸克网盘" },
   { title: "局域网传输工具 LocalSend.zip", url: "https://pan.quark.cn/s/17fdace41f15", category: "安卓软件", source: "夸克网盘", note: "支持安卓、windows、linux、maxos" },
   { title: "应用架构分析工具LibChecker.zip", url: "https://pan.quark.cn/s/43482848e622", category: "安卓软件", source: "夸克网盘" },
@@ -742,6 +744,7 @@ var LINKS_DATA = [
   { title: "看漫画 copymanga拷贝漫画2.3.1.apk", url: "https://pan.quark.cn/s/c0f300f68841", category: "安卓软件", source: "夸克网盘" },
   { title: "视频下载工具 Seal-1.13.1.apk", url: "https://pan.quark.cn/s/885fce5efc48", category: "安卓软件", source: "夸克网盘", note: "设置可填cookie" },
   { title: "追番用 Kazumi_android_1.6.0.apk", url: "https://pan.quark.cn/s/c0757898c978", category: "安卓软件", source: "夸克网盘" },
+  { title: "linkAndroid", url: "https://pan.quark.cn/s/be6dc7090974", category: "安卓软件", source: "夸克网盘", note: "操控多台手机，可编写脚本" },
 
   // ===== 游戏 (108) =====
   { title: "A 奥日系列合集", url: "https://pan.quark.cn/s/ce019abafe4c", category: "游戏", source: "夸克网盘" },
