@@ -338,7 +338,7 @@ var LINKS_DATA = [
   { title: "打了300年的史莱姆，不知不觉就练到了满级", url: "https://pan.quark.cn/s/87589d7c0a4e", category: "动漫", source: "夸克网盘", note: "附小说" },
   { title: "打工仔的拷问日常", url: "https://pan.quark.cn/s/e45cb009ed88", category: "动漫", source: "夸克网盘" },
   { title: "排球少年", url: "https://pan.quark.cn/s/c9c7b7430217", category: "动漫", source: "夸克网盘" },
-  { title: "推理要在晚餐后", url: "https://pan.quark.cn/s/3845d955179d", category: "动漫", source: "夸克网盘", note: "小说 真人版 电影" },
+  { title: "推理要在晚餐后", url: "https://pan.quark.cn/s/1f0cdd4ad0fa", category: "动漫", source: "夸克网盘", note: "小说 真人版 电影" },
   { title: "搞笑漫画日和", url: "https://pan.quark.cn/s/5555f3c22338", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "摇曳露营△", url: "https://pan.quark.cn/s/ed7190cf4c77", category: "动漫", source: "夸克网盘" },
   { title: "摇滚是淑女的爱好", url: "https://pan.quark.cn/s/307d43b876ff", category: "动漫", source: "夸克网盘", note: "附漫画" },
@@ -372,7 +372,7 @@ var LINKS_DATA = [
   { title: "来自深渊", url: "https://pan.quark.cn/s/9d97703d431b", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "枪神 Trigun", url: "https://pan.quark.cn/s/9078bea6a24b", category: "动漫", source: "夸克网盘" },
   { title: "某科学的一方通行", url: "https://pan.quark.cn/s/526d1c84f091", category: "动漫", source: "夸克网盘" },
-  { title: "某科学的超电.磁炮", url: "https://pan.quark.cn/s/4d027e3991da", category: "动漫", source: "夸克网盘" },
+  { title: "某科学的超电磁炮", url: "https://pan.quark.cn/s/4d027e3991da", category: "动漫", source: "夸克网盘" },
   { title: "楠木邸的神明庭院", url: "https://pan.quark.cn/s/14df5cde0365", category: "动漫", source: "夸克网盘" },
   { title: "樱兰高校男公关部", url: "https://pan.quark.cn/s/9bbd44247944", category: "动漫", source: "夸克网盘" },
   { title: "欢迎光临流放者食堂！", url: "https://pan.quark.cn/s/810eb5a3e393", category: "动漫", source: "夸克网盘" },
@@ -734,7 +734,7 @@ var LINKS_DATA = [
   { title: "【英语四六级】合集", url: "https://pan.quark.cn/s/305158ade614", category: "学习资料", source: "夸克网盘", section: "各类课程" },
 
   // ===== 安卓软件 (11) =====
-  { title: "MT管理器安卓逆向工具 MT2.18.4.apk", url: "https://pan.quark.cn/s/2734e97e6b2e", category: "安卓软件", source: "夸克网盘" },
+  { title: "MT管理器 MT2.18.4.apk", url: "https://pan.quark.cn/s/2734e97e6b2e", category: "安卓软件", source: "夸克网盘" , note: "安卓逆向、解包工具"},
   { title: "局域网传输工具 LocalSend.zip", url: "https://pan.quark.cn/s/17fdace41f15", category: "安卓软件", source: "夸克网盘", note: "支持安卓、windows、linux、maxos" },
   { title: "应用架构分析工具LibChecker.zip", url: "https://pan.quark.cn/s/43482848e622", category: "安卓软件", source: "夸克网盘" },
   { title: "很强的手机AI助手 Operit.apk", url: "https://pan.quark.cn/s/319e8c6ef62f", category: "安卓软件", source: "夸克网盘" },
@@ -1805,7 +1805,7 @@ var LINKS_DATA = [
 ];
 
 var SECTION_TIPS = {
-  "漫画小说|漫画": "轻小说在楼下 · 如果这里没有可以到动漫合集链接找找",
+  "漫画小说|漫画": "部分轻小说、漫画在动漫链接里",
   "剧集|少量电影": "部分为bt链接，夸克可以直接解析下载",
   "学习资料|各类教材": "百度云盘有云打印功能，会比较便宜"
 };
