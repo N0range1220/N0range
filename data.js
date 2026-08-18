@@ -17,6 +17,8 @@ var LINKS_DATA = [
   // --- AI相关 ---
   { title: "AI语音合成声音克隆数字人生成 AigcPanelPro-0.11.0-win-x64.exe", url: "https://pan.quark.cn/s/a145ea94cc4e", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
   { title: "AnythingLLMDesktop.exe", url: "https://pan.quark.cn/s/6578be374b24", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
+  { title: "AI换脸MagicMirror", url: "https://pan.quark.cn/s/ecbb99bb5244", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
+  { title: "声音克隆Voicebox_0.5.0_x64-setup.exe", url: "https://pan.quark.cn/s/29060e3e9012", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
   { title: "CC-Switch-v3.16.5", url: "https://pan.quark.cn/s/dc0606c9e426", category: "Windows工具", source: "夸克网盘", section: "AI相关", note: "统一管理所有支持的 AI 工具，无需手动编辑配置文件" },
   { title: "Chatbox-1.9.8-Setup.exe", url: "https://pan.quark.cn/s/315cb6edca12", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
   { title: "OllamaSetup.exe", url: "https://pan.quark.cn/s/0ea8f883d94f", category: "Windows工具", source: "夸克网盘", section: "AI相关" },
@@ -732,6 +734,10 @@ var LINKS_DATA = [
   { title: "ARM汇编.pdf", url: "https://pan.quark.cn/s/fc121f416d86", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
   // --- 各类课程 ---
   { title: "【英语四六级】合集", url: "https://pan.quark.cn/s/305158ade614", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "考研专业课-视频网课", url: "https://pan.quark.cn/s/479e8ec52a4b", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "考研英语-视频网课", url: "https://pan.quark.cn/s/fa6b4813d432", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "考研英语-电子资料", url: "https://pan.quark.cn/s/741fb4610fb0", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "考研数学-视频网课", url: "https://pan.quark.cn/s/d777eef45e80", category: "学习资料", source: "夸克网盘", section: "各类课程" },
 
   // ===== 安卓软件 (11) =====
   { title: "MT管理器 MT2.18.4.apk", url: "https://pan.quark.cn/s/2734e97e6b2e", category: "安卓软件", source: "夸克网盘" , note: "安卓逆向、解包工具"},
