@@ -526,7 +526,7 @@ var LINKS_DATA = [
   { title: "高校舰队", url: "https://pan.quark.cn/s/ae21ebb485e8", category: "动漫", source: "夸克网盘" },
   { title: "歌之王子殿下", url: "https://pan.quark.cn/s/c5e6a89f461c", category: "动漫", source: "夸克网盘" },
 
-  // ===== 学习资料 (201) =====
+  // ===== 学习资料 (221) =====
   { title: "2024年二级建造师全网最全电子版资料", url: "https://pan.quark.cn/s/b5390c103cfc", category: "学习资料", source: "夸克网盘" },
   { title: "2025《毕业论文、毕业答辩》精选资料汇总", url: "https://pan.quark.cn/s/78837394da00", category: "学习资料", source: "夸克网盘" },
   { title: "24年中级经济师网课【基础】", url: "https://pan.quark.cn/s/8d6f08c78475", category: "学习资料", source: "夸克网盘" },
@@ -738,6 +738,22 @@ var LINKS_DATA = [
   { title: "考研英语-视频网课", url: "https://pan.quark.cn/s/fa6b4813d432", category: "学习资料", source: "夸克网盘", section: "各类课程" },
   { title: "考研英语-电子资料", url: "https://pan.quark.cn/s/741fb4610fb0", category: "学习资料", source: "夸克网盘", section: "各类课程" },
   { title: "考研数学-视频网课", url: "https://pan.quark.cn/s/d777eef45e80", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【01】2026初级会计师", url: "https://pan.quark.cn/s/54561ee252d6", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【02】2026注册会计师", url: "https://pan.quark.cn/s/f2bf0b81673a", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【03】2026注册会计师综合", url: "https://pan.quark.cn/s/c738dc89305f", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【04】2026中级会计师", url: "https://pan.quark.cn/s/0d84ebe1d79f", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【05】2026高级会计师", url: "https://pan.quark.cn/s/18a4beede3d8", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【06】2026社会工作者", url: "https://pan.quark.cn/s/43234f31b6c5", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【07】2026年审计师（初中级通用）", url: "https://pan.quark.cn/s/6cf8a4d5abdd", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【08】2026资产评估师", url: "https://pan.quark.cn/s/294778fad364", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【09】2026年税务师", url: "https://pan.quark.cn/s/ac5471fab0a8", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【10】2026初级经济师", url: "https://pan.quark.cn/s/609109337579", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【11】2026中级经济师", url: "https://pan.quark.cn/s/544c7c167253", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【12】2026高级经济师", url: "https://pan.quark.cn/s/2fe94ec88970", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【13】2026中级统计师（初级也可以用）", url: "https://pan.quark.cn/s/81b9e64851e9", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【14】2026房地产评估师", url: "https://pan.quark.cn/s/f0a427229fd4", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【14】2026年高级统计师", url: "https://pan.quark.cn/s/74d959529b44", category: "学习资料", source: "夸克网盘", section: "各类课程" },
+  { title: "【15】2026审计师【高级实务】", url: "https://pan.quark.cn/s/08f3ddf6b983", category: "学习资料", source: "夸克网盘", section: "各类课程" },
 
   // ===== 安卓软件 (11) =====
   { title: "MT管理器 MT2.18.4.apk", url: "https://pan.quark.cn/s/2734e97e6b2e", category: "安卓软件", source: "夸克网盘" , note: "安卓逆向、解包工具"},
