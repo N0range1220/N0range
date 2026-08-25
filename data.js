@@ -734,10 +734,6 @@ var LINKS_DATA = [
   { title: "ARM汇编.pdf", url: "https://pan.quark.cn/s/fc121f416d86", category: "学习资料", source: "夸克网盘", section: "安全技术书籍" },
   // --- 各类课程 ---
   { title: "【英语四六级】合集", url: "https://pan.quark.cn/s/305158ade614", category: "学习资料", source: "夸克网盘", section: "各类课程" },
-  { title: "考研专业课-视频网课", url: "https://pan.quark.cn/s/479e8ec52a4b", category: "学习资料", source: "夸克网盘", section: "各类课程" },
-  { title: "考研英语-视频网课", url: "https://pan.quark.cn/s/fa6b4813d432", category: "学习资料", source: "夸克网盘", section: "各类课程" },
-  { title: "考研英语-电子资料", url: "https://pan.quark.cn/s/741fb4610fb0", category: "学习资料", source: "夸克网盘", section: "各类课程" },
-  { title: "考研数学-视频网课", url: "https://pan.quark.cn/s/d777eef45e80", category: "学习资料", source: "夸克网盘", section: "各类课程" },
   { title: "【01】2026初级会计师", url: "https://pan.quark.cn/s/54561ee252d6", category: "学习资料", source: "夸克网盘", section: "各类课程" },
   { title: "【02】2026注册会计师", url: "https://pan.quark.cn/s/f2bf0b81673a", category: "学习资料", source: "夸克网盘", section: "各类课程" },
   { title: "【03】2026注册会计师综合", url: "https://pan.quark.cn/s/c738dc89305f", category: "学习资料", source: "夸克网盘", section: "各类课程" },
