@@ -622,6 +622,28 @@ body {
   color: var(--text-dim);
 }
 .giscus { min-height: 120px; }
+.group-qr {
+  margin-bottom: 20px;
+  padding: 16px;
+  text-align: center;
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+.group-qr img {
+  display: block;
+  width: 220px;
+  height: 220px;
+  margin: 0 auto;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 8px;
+}
+.group-qr-tip {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
 .giscus-pending {
   padding: 24px 0;
   text-align: center;
