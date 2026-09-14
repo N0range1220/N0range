@@ -141,7 +141,7 @@ var LINKS_DATA = [
   { title: "花束般的恋爱(2021) 4K 国语+日语", url: "https://pan.quark.cn/s/32f5a887f34f", category: "剧集", source: "夸克网盘", section: "少量电影" },
   { title: "重出江湖", url: "https://pan.quark.cn/s/2de131684d21", category: "剧集", source: "夸克网盘", section: "少量电影" },
 
-  // ===== 动漫 (383) =====
+  // ===== 动漫 (389) =====
   { title: "#COMPASS2.0 战斗天赋解析系统", url: "https://pan.quark.cn/s/fb90394159e6", category: "动漫", source: "夸克网盘" },
   { title: "1992 幽游白书", url: "https://pan.quark.cn/s/11b8337cbe0d", category: "动漫", source: "夸克网盘" },
   { title: "2.5次元的诱惑", url: "https://pan.quark.cn/s/39b1492fdb20", category: "动漫", source: "夸克网盘", note: "带漫画" },
@@ -525,6 +525,12 @@ var LINKS_DATA = [
   { title: "关于我女友是个一本正经的碧池这件事", url: "https://pan.quark.cn/s/dfd9735172e3", category: "动漫", source: "夸克网盘" },
   { title: "高校舰队", url: "https://pan.quark.cn/s/ae21ebb485e8", category: "动漫", source: "夸克网盘" },
   { title: "歌之王子殿下", url: "https://pan.quark.cn/s/c5e6a89f461c", category: "动漫", source: "夸克网盘" },
+  { title: "落第贤者的学院无双～第二回转生，S等级作弊魔术师冒险记～", url: "https://pan.quark.cn/s/d96abe88727c", category: "动漫", source: "夸克网盘" },
+  { title: "猫与龙", url: "https://pan.quark.cn/s/e9266b76effb", category: "动漫", source: "夸克网盘" },
+  { title: "2026.07 BanG Dream! YUME∞MITA", url: "https://pan.quark.cn/s/6012437ca0e1", category: "动漫", source: "夸克网盘" },
+  { title: "LV999的村民", url: "https://pan.quark.cn/s/80ab5e95112e", category: "动漫", source: "夸克网盘" },
+  { title: "女主角？圣女？不，我是杂役女仆（自豪）！", url: "https://pan.quark.cn/s/5a9f82bae3b8", category: "动漫", source: "夸克网盘" },
+  { title: "攻壳机动队 THE GHOST IN THE SHELL", url: "https://pan.quark.cn/s/0c54a3b4db13", category: "动漫", source: "夸克网盘" },
 
   // ===== 学习资料 (358) =====
   { title: "2024年二级建造师全网最全电子版资料", url: "https://pan.quark.cn/s/b5390c103cfc", category: "学习资料", source: "夸克网盘" },
