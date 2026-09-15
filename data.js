@@ -1889,7 +1889,7 @@ var LINKS_DATA = [
   { title: "X辛特堡传说", url: "https://pan.quark.cn/s/ed7912c63af6", category: "游戏", source: "夸克网盘" },
   { title: "Z战场的赋格曲", url: "https://pan.quark.cn/s/7a72fc6708d0", category: "游戏", source: "夸克网盘" },
 
-  // ===== 漫画小说 (519) =====
+  // ===== 漫画小说 (520) =====
   // --- 漫画 ---
   { title: "8月31日的長夏 _ 伊藤一角", url: "https://pan.quark.cn/s/e8dab4661ec0", category: "漫画小说", source: "夸克网盘", section: "漫画" },
   { title: "Keroro军曹", url: "https://pan.quark.cn/s/c0b983a9c61a", category: "漫画小说", source: "夸克网盘", section: "漫画" },
@@ -2411,6 +2411,7 @@ var LINKS_DATA = [
   { title: "满怀美梦的少年是现实主义者", url: "https://pan.quark.cn/s/1b1dff24d335", category: "漫画小说", source: "夸克网盘", section: "轻小说", note: "解压密码n0range.fun" },
   { title: "闷黑少女换上爱妻围裙过后", url: "https://pan.quark.cn/s/898160c824c9", category: "漫画小说", source: "夸克网盘", section: "轻小说", note: "解压密码n0range.fun" },
   { title: "Missing_神隐物语", url: "https://pan.quark.cn/s/82c393442198", category: "漫画小说", source: "夸克网盘", section: "轻小说", note: "解压密码n0range.fun" },
+  { title: "3000+txt轻小说", url: "https://pan.quark.cn/s/e274a8f294ac", category: "漫画小说", source: "夸克网盘", section: "轻小说", note: "解压密码：https://n0range.fun" },
 ];
 
 var SECTION_TIPS = {
