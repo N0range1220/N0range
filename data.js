@@ -141,7 +141,7 @@ var LINKS_DATA = [
   { title: "花束般的恋爱(2021) 4K 国语+日语", url: "https://pan.quark.cn/s/32f5a887f34f", category: "剧集", source: "夸克网盘", section: "少量电影" },
   { title: "重出江湖", url: "https://pan.quark.cn/s/2de131684d21", category: "剧集", source: "夸克网盘", section: "少量电影" },
 
-  // ===== 动漫 (389) =====
+  // ===== 动漫 (399) =====
   { title: "#COMPASS2.0 战斗天赋解析系统", url: "https://pan.quark.cn/s/fb90394159e6", category: "动漫", source: "夸克网盘" },
   { title: "1992 幽游白书", url: "https://pan.quark.cn/s/11b8337cbe0d", category: "动漫", source: "夸克网盘" },
   { title: "2.5次元的诱惑", url: "https://pan.quark.cn/s/39b1492fdb20", category: "动漫", source: "夸克网盘", note: "带漫画" },
@@ -531,6 +531,16 @@ var LINKS_DATA = [
   { title: "LV999的村民", url: "https://pan.quark.cn/s/80ab5e95112e", category: "动漫", source: "夸克网盘" },
   { title: "女主角？圣女？不，我是杂役女仆（自豪）！", url: "https://pan.quark.cn/s/5a9f82bae3b8", category: "动漫", source: "夸克网盘" },
   { title: "攻壳机动队 THE GHOST IN THE SHELL", url: "https://pan.quark.cn/s/0c54a3b4db13", category: "动漫", source: "夸克网盘" },
+  { title: "炒翻天／铁锅料理王", url: "https://pan.quark.cn/s/9eb246b5c845", category: "动漫", source: "夸克网盘" },
+  { title: "暗黑灯火 BLACK TORCH", url: "https://pan.quark.cn/s/6cc53fab9e23", category: "动漫", source: "夸克网盘" },
+  { title: "说了不打算爱我的公爵继承人，不知为何对我宠爱有加", url: "https://pan.quark.cn/s/26782368ffc7", category: "动漫", source: "夸克网盘" },
+  { title: "鬼之花嫁／鬼的新娘", url: "https://pan.quark.cn/s/c9bb9d018971", category: "动漫", source: "夸克网盘" },
+  { title: "世界最强的后卫～迷宫国的新人探索者～", url: "https://pan.quark.cn/s/263d2573175d", category: "动漫", source: "夸克网盘" },
+  { title: "岩元前辈的推荐", url: "https://pan.quark.cn/s/48699c4635b9", category: "动漫", source: "夸克网盘" },
+  { title: "黑猫与魔女的教室", url: "https://pan.quark.cn/s/28d86e2f4492", category: "动漫", source: "夸克网盘" },
+  { title: "才女的侍从 在满是高岭之花的贵族学校暗中照顾（毫无生活自理能力的）学院第一大小姐", url: "https://pan.quark.cn/s/11a8e1b2b53e", category: "动漫", source: "夸克网盘" },
+  { title: "黄泉的使者", url: "https://pan.quark.cn/s/51f4ae29e9dc", category: "动漫", source: "夸克网盘" },
+  { title: "虽然我是不完美恶女～雏宫蝶鼠替换传／恶女不才，请多关照～雏宫蝶鼠换身传", url: "https://pan.quark.cn/s/00e4b69e159c", category: "动漫", source: "夸克网盘" },
 
   // ===== 学习资料 (358) =====
   { title: "2024年二级建造师全网最全电子版资料", url: "https://pan.quark.cn/s/b5390c103cfc", category: "学习资料", source: "夸克网盘" },
