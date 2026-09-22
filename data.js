@@ -140,6 +140,7 @@ var LINKS_DATA = [
   { title: "环太平洋", url: "https://pan.quark.cn/s/76c850a4572b", category: "剧集", source: "夸克网盘", section: "少量电影" },
   { title: "花束般的恋爱(2021) 4K 国语+日语", url: "https://pan.quark.cn/s/32f5a887f34f", category: "剧集", source: "夸克网盘", section: "少量电影" },
   { title: "重出江湖", url: "https://pan.quark.cn/s/2de131684d21", category: "剧集", source: "夸克网盘", section: "少量电影" },
+  { title: "X侠女内莉（2026）", url: "https://pan.quark.cn/s/ec4dd58424cb", category: "剧集", source: "夸克网盘" },
 
   // ===== 动漫 (399) =====
   { title: "#COMPASS2.0 战斗天赋解析系统", url: "https://pan.quark.cn/s/fb90394159e6", category: "动漫", source: "夸克网盘" },
@@ -542,7 +543,7 @@ var LINKS_DATA = [
   { title: "黄泉的使者", url: "https://pan.quark.cn/s/51f4ae29e9dc", category: "动漫", source: "夸克网盘" , note: "附漫画" },
   { title: "虽然我是不完美恶女～雏宫蝶鼠替换传／恶女不才，请多关照～雏宫蝶鼠换身传", url: "https://pan.quark.cn/s/00e4b69e159c", category: "动漫", source: "夸克网盘" , note: "附漫画小说" },
 
-  // ===== 学习资料 (358) =====
+  // ===== 学习资料 (359) =====
   { title: "2024年二级建造师全网最全电子版资料", url: "https://pan.quark.cn/s/b5390c103cfc", category: "学习资料", source: "夸克网盘" },
   { title: "2025《毕业论文、毕业答辩》精选资料汇总", url: "https://pan.quark.cn/s/78837394da00", category: "学习资料", source: "夸克网盘" },
   { title: "24年中级经济师网课【基础】", url: "https://pan.quark.cn/s/8d6f08c78475", category: "学习资料", source: "夸克网盘" },
@@ -622,6 +623,7 @@ var LINKS_DATA = [
   { title: "中医古籍珍稀抄本精选", url: "https://pan.quark.cn/s/4119e047c7ee", category: "学习资料", source: "夸克网盘", section: "各类书籍" },
   { title: "中医古籍新点、新校、新参考系列（全10册）", url: "https://pan.quark.cn/s/301f55303610", category: "学习资料", source: "夸克网盘", section: "各类书籍" },
   { title: "三部六病医学流派丛书（全5册）", url: "https://pan.quark.cn/s/5ce46bc94d7e", category: "学习资料", source: "夸克网盘", section: "各类书籍" },
+  { title: "运动健身书籍合集PDF", url: "https://pan.quark.cn/s/2d97ea058969", category: "学习资料", source: "夸克网盘", section: "各类书籍" },
   // --- 各类教材 ---
   { title: "初中教材", url: "https://pan.baidu.com/s/1I1DQ52laX9gJaGlAGQMMMQ?pwd=ewwg", category: "学习资料", source: "百度网盘", code: "ewwg", section: "各类教材" },
   { title: "初中（五•四学制）教材", url: "https://pan.baidu.com/s/1T0SqBY_rp1a8tpd2zr2jSQ?pwd=ewwg", category: "学习资料", source: "百度网盘", code: "ewwg", section: "各类教材" },
