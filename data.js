@@ -142,7 +142,7 @@ var LINKS_DATA = [
   { title: "重出江湖", url: "https://pan.quark.cn/s/2de131684d21", category: "剧集", source: "夸克网盘", section: "少量电影" },
   { title: "X侠女内莉（2026）", url: "https://pan.quark.cn/s/ec4dd58424cb", category: "剧集", source: "夸克网盘" },
 
-  // ===== 动漫 (399) =====
+  // ===== 动漫 (411) =====
   { title: "#COMPASS2.0 战斗天赋解析系统", url: "https://pan.quark.cn/s/fb90394159e6", category: "动漫", source: "夸克网盘" },
   { title: "1992 幽游白书", url: "https://pan.quark.cn/s/11b8337cbe0d", category: "动漫", source: "夸克网盘" },
   { title: "2.5次元的诱惑", url: "https://pan.quark.cn/s/39b1492fdb20", category: "动漫", source: "夸克网盘", note: "带漫画" },
@@ -542,6 +542,18 @@ var LINKS_DATA = [
   { title: "才女的侍从 在满是高岭之花的贵族学校暗中照顾（毫无生活自理能力的）学院第一大小姐", url: "https://pan.quark.cn/s/11a8e1b2b53e", category: "动漫", source: "夸克网盘" , note: "附小说" },
   { title: "黄泉的使者", url: "https://pan.quark.cn/s/51f4ae29e9dc", category: "动漫", source: "夸克网盘" , note: "附漫画" },
   { title: "虽然我是不完美恶女～雏宫蝶鼠替换传／恶女不才，请多关照～雏宫蝶鼠换身传", url: "https://pan.quark.cn/s/00e4b69e159c", category: "动漫", source: "夸克网盘" , note: "附漫画小说" },
+  { title: "再见菈菈", url: "https://pan.quark.cn/s/f140bfbf6597", category: "动漫", source: "夸克网盘" },
+  { title: "碧蓝航线", url: "https://pan.quark.cn/s/eca046d5a8f3", category: "动漫", source: "夸克网盘" },
+  { title: "最强出涸皇子的暗跃帝位争夺", url: "https://pan.quark.cn/s/83938f6b4cdd", category: "动漫", source: "夸克网盘" },
+  { title: "拯救替身千金的是冷酷无情冰之王子的爱", url: "https://pan.quark.cn/s/d137a4ca70ce", category: "动漫", source: "夸克网盘" },
+  { title: "世界在起舞", url: "https://pan.quark.cn/s/06eb0c614691", category: "动漫", source: "夸克网盘" },
+  { title: "暴怒千金发誓复仇。～凭借魔导书之力打垮祖国～", url: "https://pan.quark.cn/s/06280ce85fa7", category: "动漫", source: "夸克网盘" },
+  { title: "无用圣女的异世界美食之旅 凭借隐藏技能召唤露营车", url: "https://pan.quark.cn/s/ac02ea88f6a0", category: "动漫", source: "夸克网盘" },
+  { title: "转学后班上的清纯可爱美少女，竟是小时候玩在一起的哥儿们", url: "https://pan.quark.cn/s/2a168f522a09", category: "动漫", source: "夸克网盘" },
+  { title: "斗球儿弹子／炎之斗球女弹子", url: "https://pan.quark.cn/s/d44122c748bf", category: "动漫", source: "夸克网盘" },
+  { title: "感谢对战。～大小姐才不玩格斗游戏～", url: "https://pan.quark.cn/s/cd2f37c4b1bb", category: "动漫", source: "夸克网盘" },
+  { title: "骸骨騎士大人異世界冒險中", url: "https://pan.quark.cn/s/364c8eb6a3bb", category: "动漫", source: "夸克网盘" },
+  { title: "与奔驰于透明之夜的你，谈一场看不见的恋爱。", url: "https://pan.quark.cn/s/f4bb3f1fcc59", category: "动漫", source: "夸克网盘" },
 
   // ===== 学习资料 (359) =====
   { title: "2024年二级建造师全网最全电子版资料", url: "https://pan.quark.cn/s/b5390c103cfc", category: "学习资料", source: "夸克网盘" },
