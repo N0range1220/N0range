@@ -345,7 +345,6 @@ var LINKS_DATA = [
   { title: "搞笑漫画日和", url: "https://pan.quark.cn/s/5555f3c22338", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "摇曳露营△", url: "https://pan.quark.cn/s/ed7190cf4c77", category: "动漫", source: "夸克网盘" },
   { title: "摇滚是淑女的爱好", url: "https://pan.quark.cn/s/307d43b876ff", category: "动漫", source: "夸克网盘", note: "附漫画" },
-  { title: "摩绪 MAO", url: "https://pan.quark.cn/s/6273d9fa1736", category: "动漫", source: "夸克网盘" },
   { title: "擅长捉弄的高木同学", url: "https://pan.quark.cn/s/a997cca8545b", category: "动漫", source: "夸克网盘", note: "附剧场版 真人版" },
   { title: "擅长逃跑的殿下／少主溜的快", url: "https://pan.quark.cn/s/1ed47c44af46", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "文豪野犬", url: "https://pan.quark.cn/s/c0b6eff67743", category: "动漫", source: "夸克网盘" },
