@@ -142,7 +142,7 @@ var LINKS_DATA = [
   { title: "重出江湖", url: "https://pan.quark.cn/s/2de131684d21", category: "剧集", source: "夸克网盘", section: "少量电影" },
   { title: "X侠女内莉（2026）", url: "https://pan.quark.cn/s/ec4dd58424cb", category: "剧集", source: "夸克网盘" },
 
-  // ===== 动漫 (411) =====
+  // ===== 动漫 (426) =====
   { title: "#COMPASS2.0 战斗天赋解析系统", url: "https://pan.quark.cn/s/fb90394159e6", category: "动漫", source: "夸克网盘" },
   { title: "1992 幽游白书", url: "https://pan.quark.cn/s/11b8337cbe0d", category: "动漫", source: "夸克网盘" },
   { title: "2.5次元的诱惑", url: "https://pan.quark.cn/s/39b1492fdb20", category: "动漫", source: "夸克网盘", note: "带漫画" },
@@ -265,7 +265,7 @@ var LINKS_DATA = [
   { title: "在魔王城说晚安", url: "https://pan.quark.cn/s/9f713f980c09", category: "动漫", source: "夸克网盘" },
   { title: "地狱乐", url: "https://pan.quark.cn/s/5a8cb9ada419", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "地狱少女", url: "https://pan.quark.cn/s/abe7d3f43871", category: "动漫", source: "夸克网盘" },
-  { title: "地狱模式 ～喜欢速通游戏的玩家在废设定异世界无双～", url: "https://pan.quark.cn/s/370f80d00889", category: "动漫", source: "夸克网盘" },
+  { title: "地狱模式 ～喜欢速通游戏的玩家在废设定异世界无双～", url: "https://pan.quark.cn/s/34811a893830", category: "动漫", source: "夸克网盘" },
   { title: "地缚少年花子君", url: "https://pan.quark.cn/s/95bfffae2965", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "坂本日常／坂本 Days", url: "https://pan.quark.cn/s/b804c5c3c9c9", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "坂本日常／坂本Days", url: "https://pan.quark.cn/s/e99643cfd7d3", category: "动漫", source: "夸克网盘", note: "附漫画" },
@@ -473,7 +473,7 @@ var LINKS_DATA = [
   { title: "身为暗杀者的我明显比勇者还强", url: "https://pan.quark.cn/s/5d09f840702e", category: "动漫", source: "夸克网盘" },
   { title: "身为魔族的我想向勇者小队的可爱女孩告白。", url: "https://pan.quark.cn/s/a6fe00a2c6b1", category: "动漫", source: "夸克网盘" },
   { title: "身为魔王的我娶了奴隶精灵为妻，该如何表白我的爱？", url: "https://pan.quark.cn/s/27cfdde64e49", category: "动漫", source: "夸克网盘", note: "附漫画 小说" },
-  { title: "躲在超市后门抽烟的两人", url: "https://pan.quark.cn/s/f699b40d2882", category: "动漫", source: "夸克网盘", note: "附漫画" },
+  { title: "躲在超市后门抽烟的两人", url: "https://pan.quark.cn/s/2afcc5e2bef5", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "輪迴的花瓣/轮回的花瓣", url: "https://pan.quark.cn/s/e3559124f16e", category: "动漫", source: "夸克网盘" },
   { title: "转生七王子的魔法全解／转生为第七王子，随心所欲的魔法学习之路", url: "https://pan.quark.cn/s/eb144cfb3691", category: "动漫", source: "夸克网盘", note: "附漫画" },
   { title: "转生就是剑／转生成为魔剑", url: "https://pan.quark.cn/s/904985595304", category: "动漫", source: "夸克网盘" },
@@ -554,6 +554,21 @@ var LINKS_DATA = [
   { title: "感谢对战。～大小姐才不玩格斗游戏～", url: "https://pan.quark.cn/s/cd2f37c4b1bb", category: "动漫", source: "夸克网盘" },
   { title: "骸骨騎士大人異世界冒險中", url: "https://pan.quark.cn/s/364c8eb6a3bb", category: "动漫", source: "夸克网盘" },
   { title: "与奔驰于透明之夜的你，谈一场看不见的恋爱。", url: "https://pan.quark.cn/s/f4bb3f1fcc59", category: "动漫", source: "夸克网盘" },
+  { title: "成长秀～向日葵马戏团～", url: "https://pan.quark.cn/s/4cae9b10e8d2", category: "动漫", source: "夸克网盘" },
+  { title: "花织同学转生后还是想干架", url: "https://pan.quark.cn/s/b5a61dd528eb", category: "动漫", source: "夸克网盘" },
+  { title: "魔法光源股份有限公司／柔光魔女股份有限公司", url: "https://pan.quark.cn/s/bb208486c719", category: "动漫", source: "夸克网盘" },
+  { title: "数码宝贝 BEATBREAK", url: "https://pan.quark.cn/s/450d9693a892", category: "动漫", source: "夸克网盘" },
+  { title: "摩绪 MAO", url: "https://pan.quark.cn/s/683517537542", category: "动漫", source: "夸克网盘" },
+  { title: "令和的斑小姐", url: "https://pan.quark.cn/s/ce165d5a93b6", category: "动漫", source: "夸克网盘" },
+  { title: "描绘直至生命尽头／画完这个就去死", url: "https://pan.quark.cn/s/74f0bf5ef391", category: "动漫", source: "夸克网盘" },
+  { title: "欺诈游戏 Liar Game", url: "https://pan.quark.cn/s/4adf896323d9", category: "动漫", source: "夸克网盘" },
+  { title: "尼古喵喵", url: "https://pan.quark.cn/s/22f555f048ee", category: "动漫", source: "夸克网盘" },
+  { title: "Let;s Go 怪奇组", url: "https://pan.quark.cn/s/671a7934c70a", category: "动漫", source: "夸克网盘" },
+  { title: "入間同學入魔了", url: "https://pan.quark.cn/s/5bf7fd089a6c", category: "动漫", source: "夸克网盘" },
+  { title: "不虐待我的继母与继姐", url: "https://pan.quark.cn/s/516c3cc0df37", category: "动漫", source: "夸克网盘" },
+  { title: "剧场版 物怪 蛇神 (2026.05)", url: "https://pan.quark.cn/s/b216455494c2", category: "动漫", source: "夸克网盘" },
+  { title: "梅比乌斯之尘", url: "https://pan.quark.cn/s/b7260de41908", category: "动漫", source: "夸克网盘" },
+  { title: "無職轉生~到了異世界就拿出真本事~", url: "https://pan.quark.cn/s/9fbb9b6ae8b2", category: "动漫", source: "夸克网盘" },
 
   // ===== 学习资料 (359) =====
   { title: "2024年二级建造师全网最全电子版资料", url: "https://pan.quark.cn/s/b5390c103cfc", category: "学习资料", source: "夸克网盘" },
