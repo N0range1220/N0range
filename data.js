@@ -67,7 +67,7 @@ var LINKS_DATA = [
   { title: "环境切换 Miniconda3-latest-Windows-x86_64.exe", url: "https://pan.quark.cn/s/8628eb69b186", category: "Windows工具", source: "夸克网盘", section: "编程相关" },
   { title: "轻量级编辑器 npp.8.7.7.Installer.x64.exe", url: "https://pan.quark.cn/s/9d45806231b6", category: "Windows工具", source: "夸克网盘", section: "编程相关" },
 
-  // ===== 剧集 (72) =====
+  // ===== 剧集 (73) =====
   { title: "9号秘事.全9季+特别篇.中英双语", url: "https://pan.quark.cn/s/db82a8dfc4e5", category: "剧集", source: "夸克网盘" },
   { title: "21世纪大君夫人 2026", url: "https://pan.quark.cn/s/582e8a91293e", category: "剧集", source: "夸克网盘" },
   { title: "A 爱，死亡和机器人 1-4季 内封+内嵌字幕 4K+1080P", url: "https://pan.quark.cn/s/b1e52da3f8d1", category: "剧集", source: "夸克网盘" },
@@ -141,8 +141,9 @@ var LINKS_DATA = [
   { title: "花束般的恋爱(2021) 4K 国语+日语", url: "https://pan.quark.cn/s/32f5a887f34f", category: "剧集", source: "夸克网盘", section: "少量电影" },
   { title: "重出江湖", url: "https://pan.quark.cn/s/2de131684d21", category: "剧集", source: "夸克网盘", section: "少量电影" },
   { title: "X侠女内莉（2026）", url: "https://pan.quark.cn/s/ec4dd58424cb", category: "剧集", source: "夸克网盘" },
+  { title: "辣妹刺客/宝宝刺客", url: "https://pan.quark.cn/s/6e5cf7322f3c", category: "剧集", source: "夸克网盘" },
 
-  // ===== 动漫 (426) =====
+  // ===== 动漫 (427) =====
   { title: "#COMPASS2.0 战斗天赋解析系统", url: "https://pan.quark.cn/s/fb90394159e6", category: "动漫", source: "夸克网盘" },
   { title: "1992 幽游白书", url: "https://pan.quark.cn/s/11b8337cbe0d", category: "动漫", source: "夸克网盘" },
   { title: "2.5次元的诱惑", url: "https://pan.quark.cn/s/39b1492fdb20", category: "动漫", source: "夸克网盘", note: "带漫画" },
@@ -568,6 +569,7 @@ var LINKS_DATA = [
   { title: "剧场版 物怪 蛇神 (2026.05)", url: "https://pan.quark.cn/s/b216455494c2", category: "动漫", source: "夸克网盘" },
   { title: "梅比乌斯之尘", url: "https://pan.quark.cn/s/b7260de41908", category: "动漫", source: "夸克网盘" },
   { title: "無職轉生~到了異世界就拿出真本事~", url: "https://pan.quark.cn/s/9fbb9b6ae8b2", category: "动漫", source: "夸克网盘" },
+  { title: "雷霆三人行", url: "https://pan.quark.cn/s/30eb21237ad5", category: "动漫", source: "夸克网盘" },
 
   // ===== 学习资料 (359) =====
   { title: "2024年二级建造师全网最全电子版资料", url: "https://pan.quark.cn/s/b5390c103cfc", category: "学习资料", source: "夸克网盘" },
